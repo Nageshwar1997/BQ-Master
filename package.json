@@ -24,7 +24,7 @@
     "@tanstack/react-table": "^9.1.2",
     "axios": "^1.19.0",
     "crypto-js": "^4.2.0",
-    "hls.js": "^1.7.0",
+    "hls.js": "^1.7.1",
     "nanoid": "^6.0.1",
     "quill": "^2.0.3",
     "react": "^19.2.8",
@@ -39,7 +39,7 @@
     "zustand": "^5.0.15"
   },
   "devDependencies": {
-    "@beautinique/frontend-types": "^1.0.17",
+    "@beautinique/frontend-types": "^1.0.18",
     "@eslint/js": "^10.0.1",
     "@hookform/resolvers": "^5.9.1",
     "@react-google-maps/api": "^2.20.8",
