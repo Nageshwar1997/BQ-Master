@@ -7,6 +7,8 @@ import type {
   TCategoryZodSchema,
   TContactQueryStatus,
   TCreateContactQueryZodSchema,
+  TFieldErrors,
+  TGlobalErrors,
   TProductBasicInfoZodSchema,
   TProductDescriptionAndContentZodSchema,
   TProductMediaAndGalleryZodSchema,
@@ -19,12 +21,11 @@ import type {
   TUserRole,
 } from '@beautinique/frontend-types';
 
-export type TFieldErrors = Record<string, string[]>;
 
 export interface IErrorResponse {
   message?: string;
   fieldErrors?: TFieldErrors;
-  globalErrors?: string[];
+  globalErrors?: TGlobalErrors;
 }
 
 export interface IId {

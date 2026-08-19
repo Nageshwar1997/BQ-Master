@@ -1,10 +1,12 @@
-import type { TFieldErrors } from '@/types/api.type';
+import type { TFieldErrors, TGlobalErrors } from '@beautinique/frontend-types';
+
+import type { IErrorResponse } from '@/types/api.type';
 
 class ApiError extends Error {
   fieldErrors?: TFieldErrors;
-  globalErrors?: string[];
+  globalErrors?: TGlobalErrors;
 
-  constructor(params: { message: string; fieldErrors?: TFieldErrors; globalErrors?: string[] }) {
+  constructor(params: Pick<IErrorResponse, 'fieldErrors' | 'globalErrors'> & { message: string }) {
     super(params.message);
 
     this.fieldErrors = params.fieldErrors;
