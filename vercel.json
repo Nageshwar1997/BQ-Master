@@ -1,0 +1,5 @@
+{
+  "version": 2,
+  "name": "bq-master",
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+}

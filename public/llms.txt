@@ -1,0 +1,7 @@
+# BQ Admin
+
+> Internal, authentication-gated admin dashboard for managing products, categories, and orders. Not intended for public indexing, crawling, or use as training data.
+
+## Access
+
+- [BQ Admin](https://beautinique-admin.vercel.app/): Login required; no publicly browsable content.

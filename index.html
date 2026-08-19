@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en" theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- Standard Favicon -->
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+
+    <!-- Apple Touch Icon (For iOS Devices) -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+
+    <!-- Android Chrome Icons -->
+    <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/android-chrome-512x512.png" />
+
+    <!-- Web Manifest (For PWA Support) -->
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <!-- Metropolis Font -->
+    <link
+      rel="preload"
+      href="/fonts/metropolis/Metropolis-Regular.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin="anonymous"
+    />
+    <!-- Used above-the-fold on Auth pages (headings + AuthBottomInstructions text) -->
+    <link
+      rel="preload"
+      href="/fonts/metropolis/Metropolis-SemiBold.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="preload"
+      href="/fonts/metropolis/Metropolis-Medium.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin="anonymous"
+    />
+
+    <!-- Meta Tags -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!--
+      The tags below (id="default-*") are static fallbacks for crawlers that don't run
+      JavaScript (WhatsApp, Instagram, Facebook, LinkedIn, Telegram, Discord, Slack, Twitter/X).
+      Once React mounts, PageMeta (src/components/ui/PageMeta.tsx) removes these by id and
+      renders live per-page values via react-helmet-async instead.
+    -->
+    <meta
+      id="default-description"
+      name="description"
+      content="Manage products, categories and orders."
+    />
+    <title id="default-title">BQ Master</title>
+
+    <!-- Open Graph -->
+    <meta id="default-og-type" property="og:type" content="website" />
+    <meta id="default-og-site-name" property="og:site_name" content="BQ Master" />
+    <meta id="default-og-title" property="og:title" content="BQ Master" />
+    <meta
+      id="default-og-description"
+      property="og:description"
+      content="Manage products, categories and orders."
+    />
+    <meta
+      id="default-og-image"
+      property="og:image"
+      content="https://beautinique-master.vercel.app/android-chrome-512x512.png"
+    />
+
+    <!-- Twitter Card -->
+    <meta id="default-twitter-card" name="twitter:card" content="summary_large_image" />
+    <meta id="default-twitter-title" name="twitter:title" content="BQ Master" />
+    <meta
+      id="default-twitter-description"
+      name="twitter:description"
+      content="Manage products, categories and orders."
+    />
+    <meta
+      id="default-twitter-image"
+      name="twitter:image"
+      content="https://beautinique-master.vercel.app/android-chrome-512x512.png"
+    />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/index.tsx"></script>
+  </body>
+</html>

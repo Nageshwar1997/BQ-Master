@@ -1,0 +1,12 @@
+/* index.css */
+
+@import 'tailwindcss';
+@plugin '@tailwindcss/typography';
+
+/*  !NOTE - Order matters (Don't change the order) */
+@import './styles/variables.css';
+@import './styles/fonts.css';
+@import './styles/global.css';
+@import './styles/component.css';
+@import './styles/animations.css';
+@import './styles/utility.css';
