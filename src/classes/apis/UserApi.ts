@@ -8,7 +8,13 @@ import type {
 } from '@beautinique/frontend-types';
 
 import { API_METHODS_AND_URLS } from '@/constants/api.constants';
-import type { IUser } from '@/types/api.type';
+import type {
+  IAdmin,
+  IAdminPopulated,
+  IAssignAdminTerritory,
+  IUpdateAdminStatus,
+  IUser,
+} from '@/types/api.type';
 
 import { ApiRequest } from '../ApiRequest';
 
@@ -21,7 +27,7 @@ export class AuthApi extends ApiRequest {
     return this.request<IUser>({
       ...this.routes.login.manual,
       data,
-      headers: { [HEADERS_MAP.loginRole]: USER_ROLE_MAP.ADMIN },
+      headers: { [HEADERS_MAP.loginRole]: USER_ROLE_MAP.MASTER },
     });
   };
 
@@ -71,5 +77,42 @@ export class UserApi extends ApiRequest {
 
   public changePassword = (data: TChangePasswordZodSchema) => {
     return this.request<IUser>({ ...this.routes.password.change, data });
+  };
+}
+
+export class AdminTerritoryApi extends ApiRequest {
+  private routes = API_METHODS_AND_URLS.user_service.admin.territory;
+
+  /* ===================== MY ADMIN PROFILE (self) ===================== */
+
+  public getMyAdmin = () => {
+    return this.request<IAdmin>(this.routes.me);
+  };
+
+  /* ===================== TERRITORY MAP (MASTER) ===================== */
+
+  public getTerritoryMap = () => {
+    return this.request<IAdminPopulated[]>(this.routes.map);
+  };
+
+  /* ===================== STATE ADMINS (MASTER/admin UI) ===================== */
+
+  public getStateAdmins = (state: string) => {
+    const { method, url } = this.routes.stateAdmins;
+    return this.request<IAdminPopulated[]>({ method, url: url({ state }) });
+  };
+
+  /* ===================== ASSIGN TERRITORY (MASTER) ===================== */
+
+  public assignAdminTerritory = ({ adminId, data }: IAssignAdminTerritory) => {
+    const { method, url } = this.routes.assign;
+    return this.request<IAdmin>({ method, url: url({ adminId }), data });
+  };
+
+  /* ===================== UPDATE STATUS (MASTER bypass) ===================== */
+
+  public updateAdminStatus = ({ adminId, data }: IUpdateAdminStatus) => {
+    const { method, url } = this.routes.status;
+    return this.request<IAdmin>({ method, url: url({ adminId }), data });
   };
 }

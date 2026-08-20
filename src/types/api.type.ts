@@ -1,6 +1,8 @@
 import type {
   ICreateHeaders,
+  TAdminStatus,
   TApiMethod,
+  TAssignAdminTerritoryZodSchema,
   TAuthProvider,
   TCategoryLevel,
   TCategoryLevelsMap,
@@ -16,11 +18,16 @@ import type {
   TProductWithoutVariantsZodSchema,
   TProductWithVariantsZodSchema,
   TRegisterZodSchema,
+  TSellerApprovalStatus,
+  TSellerType,
   TSort,
+  TStateOrUT,
+  TTerritoryAssignmentReason,
+  TTerritoryStatusChangeReason,
   TTryOnSelection,
+  TUpdateAdminStatusZodSchema,
   TUserRole,
 } from '@beautinique/frontend-types';
-
 
 export interface IErrorResponse {
   message?: string;
@@ -262,4 +269,89 @@ export interface IContactQueriesListResponse {
 export interface IUpdateContactQueryStatus {
   ticketId: string;
   status: TContactQueryStatus;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                              ADMIN TERRITORY                               */
+/* -------------------------------------------------------------------------- */
+
+export interface IAdminStatusHistoryEntry {
+  status: TAdminStatus;
+  reason: TTerritoryStatusChangeReason;
+  note?: string;
+  changedAt: string;
+  changedBy: string;
+  until?: string;
+  coveredBy?: string;
+}
+
+export interface IAdmin extends IId, ITimeStamp {
+  user: string;
+  assignedStates: TStateOrUT[];
+  priority: number;
+  backupAdmin?: string | null;
+  status: TAdminStatus;
+  statusReason?: string;
+  statusUpdatedAt?: string;
+  statusUpdatedBy?: string;
+  leaveUntil?: string | null;
+  statusHistory: IAdminStatusHistoryEntry[];
+  currentPendingLoad: number;
+}
+
+// `getTerritoryMap`/`getStateAdmins` populate `user` with a subset of the User doc.
+export interface IAdminPopulated extends Omit<IAdmin, 'user'> {
+  user: { _id: string; firstName: string; lastName: string; email: string; role: TUserRole };
+}
+
+export interface IAssignAdminTerritory {
+  adminId: string;
+  data: TAssignAdminTerritoryZodSchema;
+}
+
+export interface IUpdateAdminStatus {
+  adminId: string;
+  data: TUpdateAdminStatusZodSchema;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                   SELLER                                   */
+/* -------------------------------------------------------------------------- */
+
+export interface ISellerAssignedAdminHistoryEntry {
+  admin: string;
+  assignedAt: string;
+  reason: TTerritoryAssignmentReason;
+}
+
+export interface ISeller extends IId, ITimeStamp {
+  user: string;
+  businessDetails: {
+    name: string;
+    type: TSellerType;
+    email: string;
+    phoneNumber: string;
+    gstin: string;
+    pan: string;
+  };
+  address: {
+    line1: string;
+    line2?: string;
+    city: string;
+    state: TStateOrUT;
+    pincode: string;
+    country: string;
+  };
+  approvalStatus: TSellerApprovalStatus;
+  assignedAdmin?: string | null;
+  assignedAdminHistory: ISellerAssignedAdminHistoryEntry[];
+  assignedViaSuperAdminPool: boolean;
+  history?: {
+    rejectReason?: string | null;
+  };
+}
+
+export interface ISellerQueueQuery {
+  status?: TSellerApprovalStatus;
+  filter?: 'mine' | 'all' | 'unassigned';
 }

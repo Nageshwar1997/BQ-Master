@@ -74,6 +74,23 @@ export const METHODS_AND_PATHS = {
         set: { method: PATCH, path: '/set' },
       },
     },
+    admin: {
+      base: '/admin',
+      territory: {
+        base: '/territory',
+        // Self - own Admin profile. Not really needed for MASTER (they use
+        // `map`/`stateAdmins` for everyone including themselves) but kept for parity.
+        me: { method: GET, path: '/me' },
+        // MASTER assigns/reassigns which state(s) an ADMIN owns.
+        assign: { method: POST, path: '/:adminId/assign' },
+        // MASTER bypass - can force ANY status including SUSPENDED.
+        status: { method: PATCH, path: '/:adminId/status' },
+        // MASTER - full India state -> admins -> status -> load overview.
+        map: { method: GET, path: '/map' },
+        // Eligible admins for one state, ACTIVE-first.
+        stateAdmins: { method: GET, path: '/state/:state' },
+      },
+    },
   },
   media_service: {
     base: `/${SERVICE_NAMES_MAP.media}`,
@@ -125,6 +142,11 @@ export const METHODS_AND_PATHS = {
       create: { method: POST, path: '/' },
       list: { method: GET, path: '/' },
       updateStatus: { method: PATCH, path: '/:ticketId' },
+    },
+    seller: {
+      base: '/seller',
+      // "All sellers"/"Unassigned" queue - ?status=PENDING (default) & ?filter=all|unassigned
+      queue: { method: GET, path: '/queue' },
     },
   },
 } as const;

@@ -88,6 +88,8 @@ export const ROUTES = {
     UPDATE_PASSWORD: 'update-password',
   },
   ENQUIRIES: 'enquiries',
+  TERRITORY_MANAGEMENT: 'territory-management',
+  ALL_SELLERS: 'all-sellers',
 } as const;
 
 export const TOOLTIP_GAP = 15 as const;
@@ -122,6 +124,18 @@ export const SIDEBAR_DATA = [
     title: 'Enquiries',
     icon: 'solar:mailbox-linear',
     path: `/${ROUTES.ENQUIRIES}`,
+    handler: null,
+  },
+  {
+    title: 'Territory Management',
+    icon: 'solar:global-linear',
+    path: `/${ROUTES.TERRITORY_MANAGEMENT}`,
+    handler: null,
+  },
+  {
+    title: 'All Sellers',
+    icon: 'solar:users-group-rounded-linear',
+    path: `/${ROUTES.ALL_SELLERS}`,
     handler: null,
   },
   {

@@ -1,7 +1,12 @@
 import type { IListContactQueriesQuery } from '@beautinique/frontend-types';
 
 import { API_METHODS_AND_URLS } from '@/constants/api.constants';
-import type { IContactQueriesListResponse, IUpdateContactQueryStatus } from '@/types/api.type';
+import type {
+  IContactQueriesListResponse,
+  ISeller,
+  ISellerQueueQuery,
+  IUpdateContactQueryStatus,
+} from '@/types/api.type';
 
 import { ApiRequest } from '../ApiRequest';
 
@@ -21,5 +26,14 @@ export class ContactApi extends ApiRequest {
       url: url({ ticketId }),
       params: { status },
     });
+  };
+}
+
+export class SellerApi extends ApiRequest {
+  private routes = API_METHODS_AND_URLS.organization_service.seller;
+
+  /* ================== GET SELLER QUEUE ("All"/"Unassigned") ================== */
+  public getSellerQueue = (params: ISellerQueueQuery) => {
+    return this.request<ISeller[]>({ ...this.routes.queue, params });
   };
 }
