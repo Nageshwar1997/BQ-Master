@@ -15,6 +15,7 @@ const {
   ENQUIRIES,
   TERRITORY_MANAGEMENT,
   ALL_SELLERS,
+  AUDIT_LOG,
 } = ROUTES;
 
 // Wraps a page's dynamic import into the function react-router's `lazy` route property expects.
@@ -94,6 +95,12 @@ const routes: RouteObject[] = [
       {
         path: ALL_SELLERS,
         lazy: loadPage(() => import('@/pages/organization/AllSellers')),
+      },
+
+      /* ========== AUDIT LOG ========== */
+      {
+        path: AUDIT_LOG,
+        lazy: loadPage(() => import('@/pages/admin/AuditLog')),
       },
     ],
   },

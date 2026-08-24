@@ -7,10 +7,10 @@ import { toaster } from '@/utils/common.util';
 
 const { assign, demote, map, status } = API_QUERY_KEYS.user_service.admin.territory;
 
-export const useGetTerritoryMap = () => {
+export const useGetTerritoryMap = (includeInactive = false) => {
   return useQuery({
-    queryKey: map,
-    queryFn: adminTerritoryApi.getTerritoryMap,
+    queryKey: [...map, includeInactive] as const,
+    queryFn: () => adminTerritoryApi.getTerritoryMap(includeInactive),
 
     staleTime: 60 * 1000,
     gcTime: 15 * 60 * 1000,

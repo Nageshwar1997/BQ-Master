@@ -362,6 +362,9 @@ export interface ISeller extends IId, ITimeStamp {
 }
 
 export interface ISellerQueueQuery {
-  status?: TSellerApprovalStatus;
+  // 'ALL' (task 7.3) skips the approval-status filter server-side entirely -
+  // not a real `TSellerApprovalStatus` value, so kept as a separate union
+  // member rather than widening that type.
+  status?: TSellerApprovalStatus | 'ALL';
   filter?: 'mine' | 'all' | 'unassigned';
 }

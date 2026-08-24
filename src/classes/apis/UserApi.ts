@@ -93,8 +93,11 @@ export class AdminTerritoryApi extends ApiRequest {
 
   /* ===================== TERRITORY MAP (MASTER) ===================== */
 
-  public getTerritoryMap = () => {
-    return this.request<IAdminPopulated[]>(this.routes.map);
+  public getTerritoryMap = (includeInactive = false) => {
+    return this.request<IAdminPopulated[]>({
+      ...this.routes.map,
+      ...(includeInactive && { params: { includeInactive: 'true' } }),
+    });
   };
 
   /* ===================== STATE ADMINS (MASTER/admin UI) ===================== */

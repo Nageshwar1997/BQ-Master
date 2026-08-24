@@ -90,6 +90,7 @@ export const ROUTES = {
   ENQUIRIES: 'enquiries',
   TERRITORY_MANAGEMENT: 'territory-management',
   ALL_SELLERS: 'all-sellers',
+  AUDIT_LOG: 'audit-log',
 } as const;
 
 export const TOOLTIP_GAP = 15 as const;
@@ -136,6 +137,12 @@ export const SIDEBAR_DATA = [
     title: 'All Sellers',
     icon: 'solar:users-group-rounded-linear',
     path: `/${ROUTES.ALL_SELLERS}`,
+    handler: null,
+  },
+  {
+    title: 'Audit Log',
+    icon: 'solar:document-text-linear',
+    path: `/${ROUTES.AUDIT_LOG}`,
     handler: null,
   },
   {
