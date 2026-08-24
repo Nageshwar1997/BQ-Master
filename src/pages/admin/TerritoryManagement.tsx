@@ -19,10 +19,12 @@ import Badge from '@/components/ui/Badge';
 import Button from '@/components/ui/Button';
 import Checkbox from '@/components/ui/inputs/Checkbox';
 import Input from '@/components/ui/inputs/Input';
+import Radio from '@/components/ui/inputs/Radio';
 import Select from '@/components/ui/inputs/Select';
 import Textarea from '@/components/ui/inputs/Textarea';
 import Tooltip from '@/components/ui/Tooltip';
 import { APP_TABLE_FEATURES, createAppColumnHelper, toColumn } from '@/constants/table.constants';
+import useQueryParams from '@/hooks/useQueryParams';
 import { useGetSellerQueue } from '@/services/organization-service/seller.service.query';
 import {
   useAssignAdminTerritory,
@@ -31,6 +33,8 @@ import {
   useUpdateAdminStatus,
 } from '@/services/user-service/admin.service.query';
 import type { IAdminPopulated } from '@/types/api.type';
+
+import TerritoryMapCanvas, { type IStateMapSummary } from './TerritoryMapCanvas';
 
 const STATUS_BADGE_CLASSNAME: Record<TAdminStatus, string> = {
   ACTIVE: 'text-primary-green border-primary-green/30 bg-primary-green/5',
@@ -417,7 +421,15 @@ const DemoteAdminModal = ({
 /*                                   PAGE                                     */
 /* -------------------------------------------------------------------------- */
 
+const VIEWS = ['table', 'map'] as const;
+const VIEW_MAP = Object.fromEntries(VIEWS.map((view) => [view, view])) as {
+  [K in (typeof VIEWS)[number]]: K;
+};
+
 const TerritoryManagement = () => {
+  const { queryParams, setParams } = useQueryParams();
+  const view = queryParams.view === VIEW_MAP.map ? VIEW_MAP.map : VIEW_MAP.table;
+
   const [assigningAdmin, setAssigningAdmin] = useState<IAdminPopulated | null>(null);
   const [overridingAdmin, setOverridingAdmin] = useState<IAdminPopulated | null>(null);
   const [demotingAdmin, setDemotingAdmin] = useState<IAdminPopulated | null>(null);
@@ -443,6 +455,33 @@ const TerritoryManagement = () => {
 
     return counts;
   }, [pendingSellers]);
+
+  // One entry per state an admin actually covers (a multi-state admin shows
+  // up under each of their states) - the map (task 6.3) reads this instead
+  // of re-deriving anything from `admins` itself, so it stays a pure
+  // presentation component with no knowledge of the load/status shapes.
+  const summariesByState = useMemo(() => {
+    const map = new Map<TStateOrUT, IStateMapSummary[]>();
+
+    for (const admin of admins ?? []) {
+      const summary: IStateMapSummary = {
+        adminName: `${admin.user.firstName} ${admin.user.lastName}`,
+        status: admin.status,
+        load: loadByAdminId.get(admin.user._id) ?? 0,
+      };
+
+      for (const state of admin.assignedStates) {
+        const existing = map.get(state);
+        if (existing) {
+          existing.push(summary);
+        } else {
+          map.set(state, [summary]);
+        }
+      }
+    }
+
+    return map;
+  }, [admins, loadByAdminId]);
 
   const columns = useMemo(
     () => [
@@ -566,9 +605,22 @@ const TerritoryManagement = () => {
   const rows = table.getRowModel().rows;
 
   return (
-    <PageWrapper>
+    <PageWrapper
+      navbar={{
+        children: (
+          <Radio
+            value={view}
+            onChange={(value) => {
+              setParams({ view: value });
+            }}
+            options={VIEWS.map((value) => ({ value, label: value }))}
+            className="w-56!"
+          />
+        ),
+      }}
+    >
       <div className="border-primary/10 bg-secondary-invert overflow-hidden rounded-xl border">
-        {!!rows.length && (
+        {view === VIEW_MAP.table && !!rows.length && (
           <ScrollableGradientContainer
             direction="horizontal"
             gradientClassNames={{ left: 'from-secondary-invert', right: 'from-secondary-invert' }}
@@ -604,7 +656,7 @@ const TerritoryManagement = () => {
           </ScrollableGradientContainer>
         )}
 
-        {(isLoading || isError || rows.length === 0) && (
+        {view === VIEW_MAP.table && (isLoading || isError || rows.length === 0) && (
           <div className="flex min-h-[40dvh] items-center justify-center">
             {isLoading ? (
               <ApiStatus status="loading" text="Loading territory map..." />
@@ -620,6 +672,29 @@ const TerritoryManagement = () => {
                 }
               />
             )}
+          </div>
+        )}
+
+        {view === VIEW_MAP.map && isLoading && (
+          <div className="flex min-h-[40dvh] items-center justify-center">
+            <ApiStatus status="loading" text="Loading territory map..." />
+          </div>
+        )}
+
+        {view === VIEW_MAP.map && isError && (
+          <div className="flex min-h-[40dvh] items-center justify-center">
+            <ApiStatus
+              className="min-h-0!"
+              status="error"
+              title="Failed to load territory map"
+              description="Something went wrong while fetching the territory map. Please try again."
+            />
+          </div>
+        )}
+
+        {view === VIEW_MAP.map && !isLoading && !isError && (
+          <div className="h-[70dvh] w-full">
+            <TerritoryMapCanvas summariesByState={summariesByState} />
           </div>
         )}
       </div>

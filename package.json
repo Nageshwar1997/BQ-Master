@@ -26,6 +26,7 @@
     "crypto-js": "^4.2.0",
     "hls.js": "^1.7.1",
     "nanoid": "^6.0.1",
+    "olamaps-web-sdk": "^1.4.0",
     "quill": "^2.0.3",
     "react": "^19.2.8",
     "react-color-palette": "^7.3.1",
