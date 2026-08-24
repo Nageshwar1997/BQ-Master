@@ -26,7 +26,7 @@ const Footer = () => {
           <div className="flex flex-col leading-tight">
             <GradientText text="Beautinique" type="accent" className="text-lg font-semibold" />
             <span className="text-primary/40 text-[10px] font-medium tracking-[0.15em] uppercase">
-              Seller Panel
+              Master Panel
             </span>
           </div>
         </Link>
@@ -64,7 +64,7 @@ const Footer = () => {
       <Divider />
 
       <p className="text-primary/40 px-4 py-4 text-center text-[11px] lg:px-10">
-        &copy; {year} Beautinique Pvt. Ltd. — Seller Use Only &middot; Crafted by{' '}
+        &copy; {year} Beautinique Pvt. Ltd. — Master Use Only &middot; Crafted by{' '}
         <GradientText text="Nageshwar Pawar" type="accent" className="font-medium" />
       </p>
     </footer>

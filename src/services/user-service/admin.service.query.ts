@@ -5,7 +5,7 @@ import { API_QUERY_KEYS } from '@/constants/api.constants';
 import { handleApiErrorToaster, handleApiSuccessToaster } from '@/utils/api.util';
 import { toaster } from '@/utils/common.util';
 
-const { assign, map, status } = API_QUERY_KEYS.user_service.admin.territory;
+const { assign, demote, map, status } = API_QUERY_KEYS.user_service.admin.territory;
 
 export const useGetTerritoryMap = () => {
   return useQuery({
@@ -59,6 +59,32 @@ export const useUpdateAdminStatus = () => {
       const toastId = toaster.loading({
         title: 'Please wait...',
         description: 'Updating admin status...',
+      });
+      return { toastId };
+    },
+    onSuccess: async ({ message }) => {
+      await queryClient.invalidateQueries({ queryKey: map });
+      handleApiSuccessToaster(message);
+    },
+    onError: (error) => {
+      handleApiErrorToaster(error);
+    },
+    onSettled: (_data, _error, _variables, context) => {
+      if (context?.toastId) toaster.remove(context.toastId);
+    },
+  });
+};
+
+export const useDemoteAdmin = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationKey: demote({ adminId: '' }),
+    mutationFn: adminTerritoryApi.demoteAdmin,
+    onMutate: () => {
+      const toastId = toaster.loading({
+        title: 'Please wait...',
+        description: 'Demoting admin...',
       });
       return { toastId };
     },

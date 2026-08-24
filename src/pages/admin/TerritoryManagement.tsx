@@ -21,9 +21,11 @@ import Checkbox from '@/components/ui/inputs/Checkbox';
 import Input from '@/components/ui/inputs/Input';
 import Select from '@/components/ui/inputs/Select';
 import Textarea from '@/components/ui/inputs/Textarea';
+import Tooltip from '@/components/ui/Tooltip';
 import { APP_TABLE_FEATURES, createAppColumnHelper, toColumn } from '@/constants/table.constants';
 import {
   useAssignAdminTerritory,
+  useDemoteAdmin,
   useGetTerritoryMap,
   useUpdateAdminStatus,
 } from '@/services/user-service/admin.service.query';
@@ -301,12 +303,123 @@ const StatusOverrideModal = ({
 );
 
 /* -------------------------------------------------------------------------- */
+/*                               DEMOTE MODAL                                 */
+/* -------------------------------------------------------------------------- */
+
+// Only reachable once `admin.status === 'SUSPENDED'` (task 7.1's guard - see
+// `demoteAdminController`) - suspension is what already bulk-reassigns this
+// admin's pending work away, so by the time this form is open there
+// shouldn't be anything left pointing at them.
+const DemoteAdminForm = ({
+  admin,
+  otherActiveAdmins,
+  onClose,
+}: {
+  admin: IAdminPopulated;
+  otherActiveAdmins: IAdminPopulated[];
+  onClose: () => void;
+}) => {
+  const [reassignTo, setReassignTo] = useState('');
+  const { mutateAsync, isPending } = useDemoteAdmin();
+
+  const handleSubmit = async () => {
+    await mutateAsync(
+      { adminId: admin.user._id, reassignTo: reassignTo || undefined },
+      { onSuccess: onClose },
+    );
+  };
+
+  return (
+    <div className="flex flex-col gap-4">
+      <p className="text-tertiary text-xs sm:text-sm">
+        Demoting{' '}
+        <span className="text-primary font-semibold">
+          {admin.user.firstName} {admin.user.lastName}
+        </span>{' '}
+        back to a regular user. This can&apos;t be undone from here - they&apos;d need to be
+        re-promoted (e.g. via a fresh seller/product approval flow) and re-assigned a territory from
+        scratch.
+      </p>
+
+      {admin.assignedStates.length > 0 && (
+        <div className="flex flex-col gap-2">
+          <p className="text-primary-yellow text-xs">
+            They currently own {admin.assignedStates.length} state
+            {admin.assignedStates.length === 1 ? '' : 's'}: {admin.assignedStates.join(', ')}.
+            {otherActiveAdmins.length > 0
+              ? ' Hand them to another admin now, or leave unassigned (falls back to the SUPER_ADMIN pool).'
+              : ' No other ACTIVE admin is available right now - they will fall back to the SUPER_ADMIN pool until reassigned.'}
+          </p>
+
+          {otherActiveAdmins.length > 0 && (
+            <Select
+              label="Reassign vacated states to (optional)"
+              options={otherActiveAdmins.map((other) => ({
+                label: `${other.user.firstName} ${other.user.lastName}`,
+                value: other.user._id,
+              }))}
+              selectProps={{
+                value: reassignTo,
+                onChange: (value) => {
+                  setReassignTo(String(value));
+                },
+                placeholder: 'Leave unassigned',
+                disabled: isPending,
+              }}
+            />
+          )}
+        </div>
+      )}
+
+      <Button
+        pattern="primary"
+        content="Confirm demotion"
+        buttonProps={{
+          disabled: isPending,
+          onClick: () => {
+            void handleSubmit();
+          },
+        }}
+        className="bg-primary-red! shadow-none!"
+      />
+    </div>
+  );
+};
+
+const DemoteAdminModal = ({
+  admin,
+  otherActiveAdmins,
+  onClose,
+}: {
+  admin: IAdminPopulated | null;
+  otherActiveAdmins: IAdminPopulated[];
+  onClose: () => void;
+}) => (
+  <ModalWrapper
+    isOpen={!!admin}
+    onClose={onClose}
+    header={{ title: 'Demote admin', showCloseIcon: true }}
+    className="max-w-md"
+  >
+    {admin && (
+      <DemoteAdminForm
+        key={admin._id}
+        admin={admin}
+        otherActiveAdmins={otherActiveAdmins}
+        onClose={onClose}
+      />
+    )}
+  </ModalWrapper>
+);
+
+/* -------------------------------------------------------------------------- */
 /*                                   PAGE                                     */
 /* -------------------------------------------------------------------------- */
 
 const TerritoryManagement = () => {
   const [assigningAdmin, setAssigningAdmin] = useState<IAdminPopulated | null>(null);
   const [overridingAdmin, setOverridingAdmin] = useState<IAdminPopulated | null>(null);
+  const [demotingAdmin, setDemotingAdmin] = useState<IAdminPopulated | null>(null);
 
   const { data: admins, isLoading, isError } = useGetTerritoryMap();
 
@@ -373,30 +486,48 @@ const TerritoryManagement = () => {
         columnHelper.display({
           id: 'actions',
           header: () => 'Actions',
-          cell: (info) => (
-            <div className="flex items-center justify-center gap-2">
-              <Button
-                pattern="secondary"
-                content="Territory"
-                className="w-auto! px-3! py-1.5! text-xs!"
-                buttonProps={{
-                  onClick: () => {
-                    setAssigningAdmin(info.row.original);
-                  },
-                }}
-              />
-              <Button
-                pattern="outline"
-                content="Status"
-                className="w-auto! px-3! py-1.5! text-xs!"
-                buttonProps={{
-                  onClick: () => {
-                    setOverridingAdmin(info.row.original);
-                  },
-                }}
-              />
-            </div>
-          ),
+          cell: (info) => {
+            const admin = info.row.original;
+            const canDemote = admin.status === 'SUSPENDED';
+
+            return (
+              <div className="flex flex-wrap items-center justify-center gap-2">
+                <Button
+                  pattern="secondary"
+                  content="Territory"
+                  className="w-auto! px-3! py-1.5! text-xs!"
+                  buttonProps={{
+                    onClick: () => {
+                      setAssigningAdmin(admin);
+                    },
+                  }}
+                />
+                <Button
+                  pattern="outline"
+                  content="Status"
+                  className="w-auto! px-3! py-1.5! text-xs!"
+                  buttonProps={{
+                    onClick: () => {
+                      setOverridingAdmin(admin);
+                    },
+                  }}
+                />
+                <Tooltip title="Suspend this admin first" required={!canDemote}>
+                  <Button
+                    pattern="outline"
+                    content="Demote"
+                    className="text-primary-red! border-primary-red/30! w-auto! px-3! py-1.5! text-xs!"
+                    buttonProps={{
+                      disabled: !canDemote,
+                      onClick: () => {
+                        setDemotingAdmin(admin);
+                      },
+                    }}
+                  />
+                </Tooltip>
+              </div>
+            );
+          },
         }),
       ),
     ],
@@ -484,6 +615,18 @@ const TerritoryManagement = () => {
         admin={overridingAdmin}
         onClose={() => {
           setOverridingAdmin(null);
+        }}
+      />
+      <DemoteAdminModal
+        admin={demotingAdmin}
+        otherActiveAdmins={(admins ?? []).filter(
+          (other) =>
+            other.user.role === 'ADMIN' &&
+            other.status === 'ACTIVE' &&
+            other._id !== demotingAdmin?._id,
+        )}
+        onClose={() => {
+          setDemotingAdmin(null);
         }}
       />
     </PageWrapper>

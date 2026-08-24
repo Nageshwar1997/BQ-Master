@@ -12,6 +12,8 @@ import type {
   IAdmin,
   IAdminPopulated,
   IAssignAdminTerritory,
+  IDemoteAdmin,
+  IDemoteAdminResponse,
   IUpdateAdminStatus,
   IUser,
 } from '@/types/api.type';
@@ -114,5 +116,16 @@ export class AdminTerritoryApi extends ApiRequest {
   public updateAdminStatus = ({ adminId, data }: IUpdateAdminStatus) => {
     const { method, url } = this.routes.status;
     return this.request<IAdmin>({ method, url: url({ adminId }), data });
+  };
+
+  /* ===================== DEMOTE (MASTER only) ===================== */
+
+  public demoteAdmin = ({ adminId, reassignTo }: IDemoteAdmin) => {
+    const { method, url } = this.routes.demote;
+    return this.request<IDemoteAdminResponse>({
+      method,
+      url: url({ adminId }),
+      ...(reassignTo && { params: { reassignTo } }),
+    });
   };
 }

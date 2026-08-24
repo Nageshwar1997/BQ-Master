@@ -314,6 +314,16 @@ export interface IUpdateAdminStatus {
   data: TUpdateAdminStatusZodSchema;
 }
 
+export interface IDemoteAdmin {
+  adminId: string;
+  reassignTo?: string;
+}
+
+export interface IDemoteAdminResponse {
+  vacatedStates: TStateOrUT[];
+  reassignedTo: string | null;
+}
+
 /* -------------------------------------------------------------------------- */
 /*                                   SELLER                                   */
 /* -------------------------------------------------------------------------- */
