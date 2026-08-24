@@ -23,6 +23,7 @@ import Select from '@/components/ui/inputs/Select';
 import Textarea from '@/components/ui/inputs/Textarea';
 import Tooltip from '@/components/ui/Tooltip';
 import { APP_TABLE_FEATURES, createAppColumnHelper, toColumn } from '@/constants/table.constants';
+import { useGetSellerQueue } from '@/services/organization-service/seller.service.query';
 import {
   useAssignAdminTerritory,
   useDemoteAdmin,
@@ -112,7 +113,7 @@ const AssignTerritoryForm = ({
       </div>
 
       <Input
-        label="Priority (optional - tie-break for same-state admins)"
+        label="Priority (optional - lower number wins a same-state, same-load tie-break)"
         inputProps={{
           type: 'number',
           value: priority,
@@ -423,6 +424,26 @@ const TerritoryManagement = () => {
 
   const { data: admins, isLoading, isError } = useGetTerritoryMap();
 
+  // `Admin.currentPendingLoad` (user-service) is never actually populated -
+  // see `getTerritoryMapController` (task 7.2). Real load is however many
+  // `PENDING` sellers currently point at an admin, and that data only
+  // lives in organization-service's `Seller` collection - so pull it from
+  // the same `?filter=all` queue `AllSellers.tsx` already uses and count
+  // client-side, rather than trusting the always-`0` backend field.
+  const { data: pendingSellers } = useGetSellerQueue({ status: 'PENDING', filter: 'all' });
+
+  const loadByAdminId = useMemo(() => {
+    const counts = new Map<string, number>();
+
+    for (const seller of pendingSellers ?? []) {
+      if (!seller.assignedAdmin) continue;
+
+      counts.set(seller.assignedAdmin, (counts.get(seller.assignedAdmin) ?? 0) + 1);
+    }
+
+    return counts;
+  }, [pendingSellers]);
+
   const columns = useMemo(
     () => [
       toColumn(
@@ -466,9 +487,10 @@ const TerritoryManagement = () => {
         }),
       ),
       toColumn(
-        columnHelper.accessor('currentPendingLoad', {
+        columnHelper.display({
+          id: 'load',
           header: () => 'Load',
-          cell: (info) => info.getValue(),
+          cell: (info) => loadByAdminId.get(info.row.original.user._id) ?? 0,
         }),
       ),
       toColumn(
@@ -531,7 +553,7 @@ const TerritoryManagement = () => {
         }),
       ),
     ],
-    [],
+    [loadByAdminId],
   );
 
   const table = useTable({
