@@ -38,7 +38,7 @@ export const ModalWrapper = ({
       }`}
     >
       <div
-        className={`bg-primary-invert border-primary/20 relative flex max-h-[90vh] w-full max-w-md flex-col overflow-hidden rounded-xl border shadow-lg ${className}`}
+        className={`bg-primary-invert border-primary/20 relative flex max-h-[90dvh] w-full max-w-md flex-col overflow-hidden rounded-xl border shadow-lg ${className}`}
         onClick={(e) => {
           e.stopPropagation();
         }}
