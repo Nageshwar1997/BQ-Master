@@ -44,6 +44,6 @@ export const STATE_MAP_COORDINATES: Record<TStateOrUT, [number, number]> = {
 };
 
 // Shown before anything's picked/hovered - India, roughly centered (same
-// default BQ-Client's address-picker map uses).
+// default BQ-Admin's address-picker map uses).
 export const INDIA_MAP_CENTER: [number, number] = [78.6677, 23.3511];
 export const INDIA_MAP_ZOOM = 3.6;

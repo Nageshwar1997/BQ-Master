@@ -73,7 +73,7 @@ const popupHtml = (state: TStateOrUT, summaries: IStateMapSummary[] | undefined)
 
 // `olamaps-web-sdk` ships loose `any` types past `init()` (a thin MapLibre
 // GL wrapper, not a fully-typed SDK) - same narrow local shapes pattern
-// BQ-Client's `LocationPickerModal.tsx` uses to keep the rest of this
+// BQ-Master's `LocationPickerModal.tsx` uses to keep the rest of this
 // component type-safe.
 interface IOlaMapInstance {
   on: {
@@ -127,7 +127,7 @@ const TerritoryMapCanvas = ({ summariesByState }: ITerritoryMapCanvasProps) => {
   // Surfaced instead of a silent blank box - most likely cause is this
   // app's own origin not yet being added to the Ola Maps key's
   // domain-whitelist on the Krutrim Cloud dashboard (a separate whitelist
-  // entry from `BQ-Client`'s, which only covers its own origin).
+  // entry from `BQ-Master`'s, which only covers its own origin).
   const [loadError, setLoadError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -172,7 +172,7 @@ const TerritoryMapCanvas = ({ summariesByState }: ITerritoryMapCanvasProps) => {
 
       mapRef.current = map;
 
-      // Defensive fallback, same as BQ-Client's picker - a transparent 1x1
+      // Defensive fallback, same as BQ-Master's picker - a transparent 1x1
       // pixel beats MapLibre's default "Image ... could not be loaded"
       // console warning for any icon a style references but doesn't ship.
       map.on('styleimagemissing', (event) => {
