@@ -1,10 +1,31 @@
-import { VARIANT_TYPES, VARIANT_TYPES_MAP } from '@beautinique/frontend-constants';
+import {
+  CONTACT_QUERY_TYPES,
+  COUNTRIES,
+  SELLER_TYPES,
+  STATES_AND_UTS,
+  VARIANT_TYPES,
+  VARIANT_TYPES_MAP,
+} from '@beautinique/frontend-constants';
+import type { TPasswordsZodSchema } from '@beautinique/frontend-types';
 
 import type { TQuillToolbar } from '@/types/input.type';
 
-export const PASSWORD_KEYS = ['password', 'confirmPassword'];
+export const BASE_PASSWORD_KEYS: readonly (keyof TPasswordsZodSchema)[] = [
+  'password',
+  'confirmPassword',
+];
 
-const NAME_DATA = { type: 'text', autoComplete: 'given-name' } as const;
+export const BASE_PASSWORDS_VISIBILITY = Object.fromEntries(
+  BASE_PASSWORD_KEYS.map((key) => [key, false] as const),
+) as Readonly<Record<(typeof BASE_PASSWORD_KEYS)[number], false>>;
+
+const NAME_INPUT_DATA = {
+  name: 'name',
+  label: 'Name',
+  type: 'text',
+  autoComplete: 'given-name',
+  placeholder: 'Enter your full name',
+} as const;
 
 export const EMAIL_INPUT_DATA = {
   name: 'email',
@@ -23,14 +44,14 @@ export const OTP_INPUT_DATA = {
 } as const;
 
 const FIRST_NAME_INPUT_DATA = {
-  ...NAME_DATA,
+  ...NAME_INPUT_DATA,
   name: 'firstName',
   label: 'First Name',
   placeholder: 'Enter first name',
 } as const;
 
 const LAST_NAME_INPUT_DATA = {
-  ...NAME_DATA,
+  ...NAME_INPUT_DATA,
   name: 'lastName',
   label: 'Last Name',
   placeholder: 'Enter last name',
@@ -93,6 +114,13 @@ export const REGISTER_INPUT_MAP_DATA = [
   LAST_NAME_INPUT_DATA,
   PHONE_NUMBER_INPUT_DATA,
   ...PASSWORDS_INPUT_MAP_DATA,
+] as const;
+
+export const UPDATE_USER_INPUT_MAP_DATA = [
+  FIRST_NAME_INPUT_DATA,
+  LAST_NAME_INPUT_DATA,
+  EMAIL_INPUT_DATA,
+  PHONE_NUMBER_INPUT_DATA,
 ] as const;
 
 export const PRODUCT_BASIC_INFO_INPUT_MAP_DATA = [
@@ -267,20 +295,202 @@ export const PRODUCT_VARIANT_INPUT_MAP_DATA = [
 export const PRODUCT_TRYON_INPUT_MAP_DATA = [
   {
     name: 'enabled',
-    content: 'Enable try-on',
+    content: 'Enable Try-On',
     type: 'checkbox',
   },
   {
     name: 'category',
     label: 'Try-on category',
     type: 'select',
-    placeholder: 'Select try-on category',
+    placeholder: 'Select Try-On category',
   },
   {
     name: 'subCategory',
     label: 'Try-on sub-category',
     type: 'select',
-    placeholder: 'Select try-on sub-category',
+    placeholder: 'Select Try-On sub-category',
+  },
+] as const;
+
+export const SELLER_BUSINESS_DETAILS_INPUT_MAP_DATA = [
+  {
+    label: 'Business name',
+    name: 'name',
+    type: 'text',
+    placeholder: 'Enter business name',
+    autoComplete: 'given-name',
+  },
+  {
+    label: 'Business type',
+    name: 'type',
+    type: 'select',
+    placeholder: 'Select business type',
+    options: SELLER_TYPES.map((type) => ({ label: type, value: type })),
+  },
+  {
+    label: 'Business email',
+    name: 'email',
+    type: 'text',
+    placeholder: 'Enter business email',
+    autoComplete: 'email',
+  },
+  {
+    label: 'Business phone number',
+    name: 'phoneNumber',
+    type: 'number',
+    placeholder: 'Enter business phone number',
+    autoComplete: 'tel',
+  },
+  {
+    label: 'GSTIN',
+    name: 'gstin',
+    type: 'text',
+    placeholder: 'Enter GSTIN',
+    autoComplete: 'given-name',
+  },
+  {
+    label: 'PAN',
+    name: 'pan',
+    type: 'text',
+    placeholder: 'Enter PAN',
+    autoComplete: 'given-name',
+  },
+] as const;
+
+export const SELLER_BANK_DETAILS_INPUT_MAP_DATA = [
+  {
+    label: 'Account holder name',
+    name: 'accountHolderName',
+    type: 'text',
+    placeholder: 'Enter name as per bank records',
+    autoComplete: 'given-name',
+  },
+  {
+    label: 'Account number',
+    name: 'accountNumber',
+    type: 'number',
+    placeholder: 'Enter account number',
+    autoComplete: 'tel',
+  },
+  {
+    label: 'IFSC code',
+    name: 'ifscCode',
+    type: 'text',
+    placeholder: 'Enter IFSC code',
+    autoComplete: 'given-name',
+  },
+  {
+    label: 'Bank name',
+    name: 'bankName',
+    type: 'text',
+    placeholder: 'Enter bank name',
+    autoComplete: 'given-name',
+  },
+] as const;
+
+export const SELLER_ADDRESS_INPUT_MAP_DATA = [
+  {
+    label: 'Address line 1',
+    name: 'line1',
+    type: 'text',
+    placeholder: 'Enter Building, street',
+    autoComplete: 'address-line1',
+  },
+  {
+    label: 'Address line 2 (optional)',
+    name: 'line2',
+    type: 'text',
+    placeholder: 'Enter Landmark, area',
+    autoComplete: 'address-line2',
+  },
+  {
+    label: 'City / Town',
+    name: 'city',
+    type: 'text',
+    placeholder: 'Enter City / Town',
+    autoComplete: 'address-level2',
+  },
+  {
+    label: 'State / Province',
+    name: 'state',
+    type: 'select',
+    placeholder: 'Select State / Province',
+    autoComplete: 'address-level1',
+    options: STATES_AND_UTS.map((value) => ({ label: value, value })),
+  },
+  {
+    label: 'Pincode',
+    name: 'pincode',
+    type: 'number',
+    placeholder: 'Enter pincode',
+    autoComplete: 'postal-code',
+  },
+  {
+    label: 'Country',
+    name: 'country',
+    type: 'select',
+    placeholder: 'Select Country',
+    autoComplete: 'address-level1',
+    options: COUNTRIES.map((value) => ({ label: value, value })),
+  },
+] as const;
+
+export const SELLER_DOCUMENTS_INPUT_MAP_DATA = [
+  {
+    label: 'ID proof',
+    name: 'id',
+    type: 'file',
+    placeholder: 'Select ID proof',
+  },
+  {
+    label: 'Address proof',
+    name: 'address',
+    type: 'file',
+    placeholder: 'Select address proof',
+  },
+  {
+    label: 'Business license',
+    name: 'license',
+    type: 'file',
+    placeholder: 'Select business license',
+  },
+  {
+    label: 'PAN card copy',
+    name: 'pan',
+    type: 'file',
+    placeholder: 'Select PAN card copy',
+  },
+  {
+    label: 'GST certificate',
+    name: 'gst',
+    type: 'file',
+    placeholder: 'Select GST certificate',
+  },
+  {
+    label: 'Cancelled cheque / bank passbook',
+    name: 'bank',
+    type: 'file',
+    placeholder: 'Select cancelled cheque or passbook',
+  },
+] as const;
+
+export const CONTACT_INPUT_MAP_DATA = [
+  NAME_INPUT_DATA,
+  EMAIL_INPUT_DATA,
+  PHONE_NUMBER_INPUT_DATA,
+  {
+    name: 'queryType',
+    label: 'Query Type',
+    type: 'select',
+    placeholder: 'What is your query about?',
+    options: CONTACT_QUERY_TYPES.map((option) => ({ label: option, value: option })),
+  },
+  {
+    name: 'message',
+    label: 'Message',
+    type: 'textarea',
+    placeholder: 'How can we help?',
+    autoComplete: 'off',
   },
 ] as const;
 

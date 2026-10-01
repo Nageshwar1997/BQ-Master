@@ -19,6 +19,11 @@
     outline: none;
   }
 
+  button:focus-visible,
+  a:focus-visible {
+    outline: 1px solid var(--primary, currentcolor);
+  }
+
   a {
     text-decoration: none;
   }
