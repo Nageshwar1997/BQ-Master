@@ -1,6 +1,7 @@
 import { IMAGE_FORMATS, IMAGE_MIMES, MAX_IMAGE_SIZE } from '@beautinique/frontend-constants';
 import type { TImageFormat, TImageMime } from '@beautinique/frontend-types';
 import { formatFileSize } from '@beautinique/shared-utils';
+import DOMPurify from 'dompurify';
 import { nanoid } from 'nanoid';
 import type Quill from 'quill';
 import type { Delta } from 'quill';
@@ -12,6 +13,25 @@ import type { IQuillImageRef } from '@/types/component.type';
 import type { IQuillToolbar, IToolBarOptions, TQuillToolbar } from '@/types/input.type';
 
 import { toaster } from './common.util';
+
+// Sanitizes HTML produced/loaded by the Quill editor before it's written into any DOM (the
+// editable root, or `QuillContent`'s read-only render target) or persisted. Needed independent of
+// Quill's own known HTML-export XSS gap (GHSA-v3m3-f69x-jf25, unescaped string interpolation in
+// the formula/video blots' `html()` methods) - this app never calls `getSemanticHTML()`/
+// `getHTML()` (the methods that advisory's PoC actually targets), but `content` here still
+// ultimately comes from persisted, attacker-reachable data (seller-authored `product.description`
+// etc. via `QuillContent`, or a previously-saved value re-opened for editing via `QuillInput`), so
+// it gets sanitized at both the read and write boundaries regardless of that specific CVE's
+// reachability. `ADD_TAGS`/`ADD_ATTR` extend DOMPurify's own safe defaults (which already permit
+// headings/lists/links/images/tables/etc.) just enough to keep the `video` toolbar format's
+// `<iframe>` embed and its sizing/playback attributes - DOMPurify still fully sanitizes `src` on
+// that iframe the same as any other URL attribute, dropping anything outside its safe-protocol
+// allowlist.
+export const sanitizeQuillHtml = (html: string): string =>
+  DOMPurify.sanitize(html, {
+    ADD_TAGS: ['iframe'],
+    ADD_ATTR: ['allowfullscreen', 'frameborder', 'target'],
+  });
 
 // Add Blob URL to Image
 export const insertImageIntoQuill = (quill: Quill, imagesRef: RefObject<IQuillImageRef[]>) => {

@@ -14,6 +14,7 @@ import {
   insertImageIntoQuill,
   removeImageFromQuill,
   removePastedStyles,
+  sanitizeQuillHtml,
   toggleLinkId,
 } from '@/utils/input.util';
 
@@ -151,8 +152,19 @@ const QuillInput = forwardRef<Quill | null, IQuillInput>(
 
     // Set value when it changes from outside
     useEffect(() => {
-      if (editorRef.current && value !== editorRef.current.root.innerHTML) {
-        editorRef.current.root.innerHTML = value ?? '';
+      if (!editorRef.current) return;
+
+      // `value` can be a previously-saved record re-opened for editing, not just this editor's
+      // own just-typed output - sanitize before it lands in the editable DOM so a tampered saved
+      // value can't execute in the authoring session itself. See `sanitizeQuillHtml`. Both sides
+      // of the comparison go through the same sanitizer (rather than comparing raw `value` against
+      // the live DOM) so DOMPurify's own harmless reserialization doesn't make an unchanged value
+      // look different from what's already on screen and reset the cursor/undo history for nothing
+      // - e.g. right after a save that feeds this already-sanitized value straight back in as `value`.
+      const sanitizedValue = value ? sanitizeQuillHtml(value) : '';
+
+      if (sanitizedValue !== sanitizeQuillHtml(editorRef.current.root.innerHTML)) {
+        editorRef.current.root.innerHTML = sanitizedValue;
       }
     }, [value]);
 

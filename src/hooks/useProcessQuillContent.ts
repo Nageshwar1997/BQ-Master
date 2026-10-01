@@ -4,11 +4,16 @@ import type { FieldPathValue, FieldValues } from 'react-hook-form';
 import { useUploadMultipleMedia } from '@/services/media-service/media.service.query';
 import type { IProcessQuillContent } from '@/types/input.type';
 import { toaster } from '@/utils/common.util';
+import { sanitizeQuillHtml } from '@/utils/input.util';
 
 const getQuillContent = (value: string) => {
   if (!value || value === '<p><br></p>') return undefined;
 
-  return value;
+  // Sanitize once more right before this becomes the value persisted to the backend (and, for
+  // whichever field editor this is, whatever other client eventually renders it) - see
+  // `sanitizeQuillHtml`'s own comment for why this isn't redundant with `QuillContent`/
+  // `QuillInput`'s own sanitization.
+  return sanitizeQuillHtml(value);
 };
 
 export const useProcessQuillContent = <T extends FieldValues>() => {

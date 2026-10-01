@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 
 import type { IClassName } from '@/types/component.type';
+import { sanitizeQuillHtml } from '@/utils/input.util';
 
 export const QuillContent = ({ content, className = '' }: IClassName & { content: string }) => {
   const contentRef = useRef<HTMLDivElement>(null);
@@ -8,7 +9,10 @@ export const QuillContent = ({ content, className = '' }: IClassName & { content
   useEffect(() => {
     const element = contentRef.current;
     if (element && content) {
-      element.innerHTML = content;
+      // `content` is persisted, seller/admin-authored HTML (e.g. `product.description`) rendered
+      // to every shopper who opens the product page - sanitize right before it reaches the DOM
+      // rather than trusting it arrived pre-sanitized. See `sanitizeQuillHtml`'s own comment.
+      element.innerHTML = sanitizeQuillHtml(content);
     }
   }, [content]);
 
