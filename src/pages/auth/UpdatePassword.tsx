@@ -1,6 +1,6 @@
 import { AUTH_PROVIDER_MAP } from '@beautinique/frontend-constants';
-import type { TChangePasswordZodSchema, TSetPasswordZodSchema } from '@beautinique/frontend-types';
-import { changePasswordZodSchema, setPasswordZodSchema } from '@beautinique/frontend-zod';
+import type { TChangePasswordZodSchema } from '@beautinique/frontend-types';
+import { changePasswordZodSchema } from '@beautinique/frontend-zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Icon } from '@iconify/react';
 import { useState } from 'react';
@@ -17,10 +17,9 @@ import Input from '@/components/ui/inputs/Input';
 import {
   BASE_PASSWORDS_VISIBILITY,
   CHANGE_PASSWORD_INPUT_MAP_DATA,
-  PASSWORDS_INPUT_MAP_DATA,
 } from '@/constants/input.constants';
 import usePathParams from '@/hooks/usePathParams';
-import { useChangePassword, useSetPassword } from '@/services/user-service/user.service.query';
+import { useChangePassword } from '@/services/user-service/user.service.query';
 import useUserStore from '@/stores/user.store';
 import { setErrorToForm } from '@/utils/form.util';
 
@@ -45,9 +44,8 @@ const UpdatePassword = () => {
   /* ================= 3. API/Queries Hooks ================= */
 
   const changePassword = useChangePassword();
-  const setPassword = useSetPassword();
 
-  const isPending = hasManualProvider ? changePassword.isPending : setPassword.isPending;
+  const isPending = changePassword.isPending;
 
   /* ================= 4. Forms ================= */
 
@@ -55,17 +53,11 @@ const UpdatePassword = () => {
     resolver: zodResolver(changePasswordZodSchema),
   });
 
-  const setPasswordForm = useForm<TSetPasswordZodSchema>({
-    resolver: zodResolver(setPasswordZodSchema),
-  });
-
   /* ================= 5. Local State ================= */
   const [showPasswords, setShowPasswords] = useState<{
     change: Record<keyof TChangePasswordZodSchema, boolean>;
-    set: Record<keyof TSetPasswordZodSchema, boolean>;
   }>({
     change: { ...BASE_PASSWORDS_VISIBILITY, currentPassword: false },
-    set: BASE_PASSWORDS_VISIBILITY,
   });
 
   /* ================= 6. Handlers ================= */
@@ -83,24 +75,9 @@ const UpdatePassword = () => {
       },
     });
   };
-  const handleSetPassword = async (data: TSetPasswordZodSchema) => {
-    await setPassword.mutateAsync(data, {
-      onSuccess: ({ data: user }) => {
-        if (user) {
-          setUser(user);
-          void navigate(-1);
-        }
-      },
-      onError: ({ fieldErrors }) => {
-        setErrorToForm(setPasswordForm.setError, fieldErrors);
-      },
-    });
-  };
 
   /* ================= 7. CONSTANTS ================= */
-  const isDirty = hasManualProvider
-    ? changePasswordForm.formState.isDirty
-    : setPasswordForm.formState.isDirty;
+  const isDirty = changePasswordForm.formState.isDirty;
 
   return (
     <div className="relative flex w-full gap-4 lg:h-[85dvh]">
@@ -131,80 +108,42 @@ const UpdatePassword = () => {
           <BorderGradient className="flex flex-col gap-5 py-6 lg:gap-6" containerClassName="w-full">
             {/* ================= MAIN FORM ================= */}
             <form
-              onSubmit={
-                hasManualProvider
-                  ? changePasswordForm.handleSubmit(handleChangePassword)
-                  : setPasswordForm.handleSubmit(handleSetPassword)
-              }
+              onSubmit={changePasswordForm.handleSubmit(handleChangePassword)}
               className="space-y-5 sm:space-y-6"
             >
               {/* ================= STEP: PASSWORD FIELDS ================= */}
               <div className="flex flex-col gap-4 sm:gap-5">
-                {hasManualProvider
-                  ? CHANGE_PASSWORD_INPUT_MAP_DATA.map((input) => (
-                      <Input
-                        key={input.name}
-                        label={input.label}
-                        inputProps={{
-                          name: input.name,
-                          type: showPasswords.change[input.name] ? 'text' : input.type,
-                          placeholder: input.placeholder,
-                          autoComplete: input.autoComplete,
-                          disabled: isPending,
-                        }}
-                        icons={{
-                          left: {
-                            icon: 'solar:lock-keyhole-minimalistic-linear',
-                            className: 'text-primary/40',
-                          },
-                          right: {
-                            icon: showPasswords.change[input.name]
-                              ? 'lucide:eye-off'
-                              : 'lucide:eye',
-                            onClick: () => {
-                              setShowPasswords((prev) => ({
-                                ...prev,
-                                set: { ...prev.set, [input.name]: !prev.change[input.name] },
-                              }));
-                            },
-                            className: 'cursor-pointer',
-                          },
-                        }}
-                        register={changePasswordForm.register(input.name)}
-                        error={changePasswordForm.formState.errors[input.name]?.message}
-                      />
-                    ))
-                  : PASSWORDS_INPUT_MAP_DATA.map((input) => (
-                      <Input
-                        key={input.name}
-                        label={input.label}
-                        inputProps={{
-                          name: input.name,
-                          type: showPasswords.set[input.name] ? 'text' : input.type,
-                          placeholder: input.placeholder,
-                          autoComplete: input.autoComplete,
-                          disabled: isPending,
-                        }}
-                        icons={{
-                          left: {
-                            icon: 'solar:lock-keyhole-minimalistic-linear',
-                            className: 'text-primary/40',
-                          },
-                          right: {
-                            icon: showPasswords.set[input.name] ? 'lucide:eye-off' : 'lucide:eye',
-                            onClick: () => {
-                              setShowPasswords((prev) => ({
-                                ...prev,
-                                set: { ...prev.set, [input.name]: !prev.set[input.name] },
-                              }));
-                            },
-                            className: 'cursor-pointer',
-                          },
-                        }}
-                        register={setPasswordForm.register(input.name)}
-                        error={setPasswordForm.formState.errors[input.name]?.message}
-                      />
-                    ))}
+                {CHANGE_PASSWORD_INPUT_MAP_DATA.map((input) => (
+                  <Input
+                    key={input.name}
+                    label={input.label}
+                    inputProps={{
+                      name: input.name,
+                      type: showPasswords.change[input.name] ? 'text' : input.type,
+                      placeholder: input.placeholder,
+                      autoComplete: input.autoComplete,
+                      disabled: isPending,
+                    }}
+                    icons={{
+                      left: {
+                        icon: 'solar:lock-keyhole-minimalistic-linear',
+                        className: 'text-primary/40',
+                      },
+                      right: {
+                        icon: showPasswords.change[input.name] ? 'lucide:eye-off' : 'lucide:eye',
+                        onClick: () => {
+                          setShowPasswords((prev) => ({
+                            ...prev,
+                            change: { ...prev.change, [input.name]: !prev.change[input.name] },
+                          }));
+                        },
+                        className: 'cursor-pointer',
+                      },
+                    }}
+                    register={changePasswordForm.register(input.name)}
+                    error={changePasswordForm.formState.errors[input.name]?.message}
+                  />
+                ))}
               </div>
               <Divider />
               {/* ================= ACTION BUTTONS ================= */}
@@ -235,12 +174,8 @@ const UpdatePassword = () => {
 
       {/* ================= RIGHT SHOWCASE PANEL ================= */}
       <BrandShowcasePanel
-        title={hasManualProvider ? 'Keep Your Account Secure' : 'One Password, One Login'}
-        description={
-          hasManualProvider
-            ? 'A strong, regularly updated password is your first line of defense on Beautinique.'
-            : 'Set a password once, and sign in with either your email or your social account, whichever you prefer.'
-        }
+        title={'Keep Your Account Secure'}
+        description="A strong, regularly updated password is your first line of defense on Beautinique."
         image={{
           src: '/images/auth/auth-left-side.webp',
           alt: 'Account security illustration',

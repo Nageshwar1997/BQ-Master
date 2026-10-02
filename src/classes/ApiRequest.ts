@@ -31,9 +31,8 @@ let refreshIntervalId: ReturnType<typeof setInterval> | null = null;
 const REFRESH_TIMEOUT_MS = 15 * 1000;
 const REACTIVE_RETRY_DELAY_MS = 500;
 
-// Render's free tier can take 50-75s to cold-start a sleeping service. The gateway's own
-// `/wake-up` handler waits up to ~75s per downstream service (with a couple of retries) before
-// responding, so this needs a generous timeout too - well above the worst case.
+// Render's free tier can take 50-75s to cold-start a sleeping instance (gateway or service), so
+// the wake-up pings need a generous timeout - well above the worst case.
 const WAKE_UP_TIMEOUT_MS = 100 * 1000;
 
 // Dedicated client used only for the refresh call itself. Every ApiRequest subclass instance
@@ -54,12 +53,53 @@ const wakeUpClient = axios.create({
 });
 
 /**
- * Pings the gateway's `/wake-up` route, which in turn wakes every downstream microservice in
- * parallel (see the gateway's `wakeUpController`). Call this once on app boot so a cold Render
- * instance wakes up proactively instead of the user's first real request eating the delay.
+ * Step 1 of the boot-time wake-up: wakes ONLY the gateway (its static home page - cheap, and
+ * unlike the gateway's `/wake-up` or `/health` it doesn't try to ping the services itself).
+ * Render blocks that gateway -> service (backend -> backend) traffic, so the services get woken
+ * by the browser instead - see `pingServicesWakeUp`, which should run after this resolves.
  */
 export const pingGatewayWakeUp = () =>
   wakeUpClient.request(GATEWAY_ROOT_API_METHODS_AND_URLS.wakeUp);
+
+/**
+ * Step 2: wakes every microservice directly from the browser, all in parallel.
+ *
+ * `mode: 'no-cors'` on purpose - the services have no CORS config (they only ever talk to the
+ * gateway), so the response is opaque and unreadable here. That's fine: the request still reaches
+ * Render and triggers provisioning, and the fetch settles as soon as ANY HTTP response comes back
+ * (which, on a cold instance, is once it has booted). Only a network failure/timeout rejects.
+ *
+ * Never rejects - each service reports back through `onServiceSettled` (called once per service,
+ * as it finishes; `ok` = Render actually answered), so a slow or dead service can't block the
+ * others or the app boot. Resolves with how many services answered.
+ */
+export const pingServicesWakeUp = async (
+  onServiceSettled?: (service: string, ok: boolean) => void,
+): Promise<number> => {
+  const results = await Promise.all(
+    Object.entries(envs.urls.services).map(async ([service, baseUrl]) => {
+      let ok = false;
+
+      try {
+        await fetch(`${baseUrl}${GATEWAY_ROOT_API_METHODS_AND_URLS.wakeUp.url}`, {
+          method: GATEWAY_ROOT_API_METHODS_AND_URLS.wakeUp.method,
+          mode: 'no-cors',
+          cache: 'no-store',
+          signal: AbortSignal.timeout(WAKE_UP_TIMEOUT_MS),
+        });
+        ok = true;
+      } catch {
+        // Network failure/timeout - reported through `ok: false` below.
+      }
+
+      onServiceSettled?.(service, ok);
+
+      return ok;
+    }),
+  );
+
+  return results.filter(Boolean).length;
+};
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 

@@ -4,18 +4,19 @@ import { useEffect } from 'react';
 import { RouterProvider } from 'react-router-dom';
 
 import LoadingScreen from './components/layout/loaders/LoadingScreen';
+import WakeUpProgress from './components/layout/loaders/WakeUpProgress';
 import ToastContainer from './components/ui/Toaster';
 import { queryClient } from './configs/queryClient';
 import envs from './envs';
-import useWakeUpGateway from './hooks/useWakeUpGateway';
+import useWakeUp from './hooks/useWakeUp';
 import router from './router';
 import useThemeStore from './stores/theme.store';
 
 function App() {
   const theme = useThemeStore((s) => s.theme);
-  // Pings the gateway (and every service behind it) once on boot, so a cold Render instance
-  // wakes up before the user's first real request hits it - see useWakeUpGateway.
-  const wakeUpStatus = useWakeUpGateway();
+  // Wakes the gateway first, then every service at once, on boot - so a cold Render instance is
+  // already awake before the user's first real request hits it. See useWakeUp.
+  const { phase: wakeUpPhase, awakeServices } = useWakeUp();
 
   useEffect(() => {
     document.documentElement.setAttribute('theme', theme);
@@ -23,8 +24,10 @@ function App() {
 
   return (
     <div className="bg-primary-invert text-primary h-dvh max-h-dvh min-h-dvh w-full max-w-dvw min-w-dvw overflow-y-scroll">
-      {wakeUpStatus === 'loading' ? (
-        <LoadingScreen />
+      {wakeUpPhase !== 'done' ? (
+        <LoadingScreen>
+          <WakeUpProgress phase={wakeUpPhase} awakeServices={awakeServices} />
+        </LoadingScreen>
       ) : (
         <QueryClientProvider client={queryClient}>
           <ToastContainer />

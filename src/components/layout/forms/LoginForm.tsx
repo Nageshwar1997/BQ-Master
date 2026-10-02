@@ -11,7 +11,7 @@ import GradientText from '@/components/ui/GradientText';
 import Input from '@/components/ui/inputs/Input';
 import Radio from '@/components/ui/inputs/Radio';
 import { ROUTES } from '@/constants/common.constants';
-import { LOGIN_INPUT_MAP_DATA, PASSWORD_KEYS } from '@/constants/input.constants';
+import { BASE_PASSWORD_KEYS, LOGIN_INPUT_MAP_DATA } from '@/constants/input.constants';
 import usePathParams from '@/hooks/usePathParams';
 import useQueryParams from '@/hooks/useQueryParams';
 import { useLogin } from '@/services/user-service/auth.service.query';
@@ -130,7 +130,7 @@ const LoginForm = () => {
 
           {/* ================= INPUTS ================= */}
           {LOGIN_INPUT_MAP_DATA.map((input) => {
-            const isPassword = PASSWORD_KEYS.includes(input.name);
+            const isPassword = BASE_PASSWORD_KEYS.includes(input.name as never);
             const isPhone = input.name === 'phoneNumber';
             const isEmail = input.name === 'email';
             const isEmailSelected = selectedMethod === 'email';
@@ -182,7 +182,7 @@ const LoginForm = () => {
               text="Forgot Password?"
               type="accent"
               path={`/${ROUTES.AUTH.BASE}/${ROUTES.AUTH.FORGOT_PASSWORD}`}
-              className="text-xs font-semibold whitespace-nowrap hover:underline"
+              className="text-xs font-semibold hover:underline"
             />
           </p>
 
