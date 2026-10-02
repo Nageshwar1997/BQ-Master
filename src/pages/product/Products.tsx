@@ -50,7 +50,7 @@ const SearchAndSort = () => {
 
   const { data: hierarchy, isLoading, isError } = useGetCategoriesHierarchy();
 
-  const handleSearch = useDebounce({
+  const { trigger: handleSearch } = useDebounce({
     callback: (value: string) => {
       const trimmedValue = value.trim();
       if (trimmedValue) {

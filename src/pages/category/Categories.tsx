@@ -97,7 +97,7 @@ const Categories = () => {
   const { data: hierarchy = EMPTY_ARRAY, isLoading, isError } = useGetCategoriesHierarchy();
   const deleteCategory = useDeleteCategory({ categoryId: deleteId });
 
-  const handleSearch = useDebounce({
+  const { trigger: handleSearch } = useDebounce({
     callback: (value: string) => {
       const trimmedValue = value.trim();
       if (trimmedValue) {
