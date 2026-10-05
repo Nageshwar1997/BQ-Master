@@ -1,0 +1,7 @@
+/* BQ-Master-only styles - loaded after `@beautinique/frontend-styles`, so anything here wins.
+ *
+ * Add this app's own CSS variables, `@theme` tokens, `@utility` classes or overrides below, e.g.:
+ *
+ *   :root { --primary: #831843; }
+ *   @theme { --color-brand: #be185d; }
+ */

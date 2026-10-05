@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@beautinique/frontend-constants": "^1.0.10",
+    "@beautinique/frontend-styles": "^1.0.0",
     "@beautinique/frontend-zod": "^1.0.25",
     "@beautinique/shared-utils": "^1.0.8",
     "@iconify/react": "^6.0.2",

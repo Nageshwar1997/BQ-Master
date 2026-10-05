@@ -1,4 +1,4 @@
-import './colorInput.css';
+import '@beautinique/frontend-styles/color-input.css';
 
 import { useState } from 'react';
 import { ColorPicker, type IColor, useColor } from 'react-color-palette';

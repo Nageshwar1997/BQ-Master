@@ -1,4 +1,4 @@
-import './teddy.css';
+import '@beautinique/frontend-styles/teddy.css';
 const Teddy = () => {
   return (
     <div aria-label="Loading Teddy" role="img" className="article">

@@ -1,4 +1,4 @@
-import './quillInput.css';
+import '@beautinique/frontend-styles/quill-input.css';
 
 import Quill, { Delta } from 'quill';
 import { forwardRef, useEffect, useRef } from 'react';

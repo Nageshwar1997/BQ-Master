@@ -1,12 +1,7 @@
 /* index.css */
 
-@import 'tailwindcss';
-@plugin '@tailwindcss/typography';
+/* Shared theme, base styles and utilities (Tailwind + typography plugin included). */
+@import '@beautinique/frontend-styles';
 
-/*  !NOTE - Order matters (Don't change the order) */
-@import './styles/variables.css';
-@import './styles/fonts.css';
-@import './styles/global.css';
-@import './styles/component.css';
-@import './styles/animations.css';
-@import './styles/utility.css';
+/* BQ-Master's own css - keep AFTER the package so it can add to / override it. */
+@import './app.css';
