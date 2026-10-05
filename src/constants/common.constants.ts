@@ -158,9 +158,6 @@ export const SIDEBAR_DATA = [
   },
 ] as const;
 
-export const EMPTY_OBJECT = {};
-export const EMPTY_ARRAY = [];
-
 export const QUERY_PARAMS_KEY_MAP = {
   category: {
     mode: 'mode', // To Set Mode (Edit or Add)

@@ -1,4 +1,8 @@
-import { CATEGORY_LEVELS_MAP, DRAFT_PRODUCT_STEP_MAP } from '@beautinique/frontend-constants';
+import {
+  CATEGORY_LEVELS_MAP,
+  DRAFT_PRODUCT_STEP_MAP,
+  EMPTY_ARRAY,
+} from '@beautinique/frontend-constants';
 import type {
   TConfirmDetailsZodSchema,
   TDraftProductStepBodyZodSchema,
@@ -24,7 +28,7 @@ import { useForm, useWatch } from 'react-hook-form';
 import PageWrapper from '@/components/layout/containers/PageWrapper';
 import Button from '@/components/ui/Button';
 import Stepper from '@/components/ui/Stepper';
-import { ADD_PRODUCT_STEPS, EMPTY_ARRAY, ROUTES } from '@/constants/common.constants';
+import { ADD_PRODUCT_STEPS, ROUTES } from '@/constants/common.constants';
 import { ADD_PRODUCT_FORM_ID_MAP } from '@/constants/form.constants';
 import usePathParams from '@/hooks/usePathParams';
 import { useProcessQuillContent } from '@/hooks/useProcessQuillContent';
@@ -547,7 +551,7 @@ const AddProduct = () => {
   ];
 
   useEffect(() => {
-    if (!draftProduct || isDraftProductLoading || isDraftProductError) return;
+    if (!draftProduct || isDraftProductError) return;
 
     if (draftProduct.basicInfo) {
       basicInfoForm.reset(draftProduct.basicInfo);

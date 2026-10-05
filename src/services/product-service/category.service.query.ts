@@ -1,8 +1,8 @@
+import { EMPTY_ARRAY } from '@beautinique/frontend-constants';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { categoryApi } from '@/classes/apis';
 import { API_QUERY_KEYS } from '@/constants/api.constants';
-import { EMPTY_ARRAY } from '@/constants/common.constants';
 import type { TL1Category, TL2Category, TL3Category } from '@/types/api.type';
 import { handleApiErrorToaster, handleApiSuccessToaster } from '@/utils/api.util';
 import { toaster } from '@/utils/common.util';

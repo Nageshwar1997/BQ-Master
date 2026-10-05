@@ -1,4 +1,4 @@
-import { CATEGORY_LEVELS_MAP } from '@beautinique/frontend-constants';
+import { CATEGORY_LEVELS_MAP, EMPTY_ARRAY } from '@beautinique/frontend-constants';
 import type {
   TCategoryZodSchema,
   TL1CategoryZodSchema,
@@ -16,7 +16,6 @@ import {
 import Input from '@/components/ui/inputs/Input';
 import Select from '@/components/ui/inputs/Select';
 import Tooltip from '@/components/ui/Tooltip';
-import { EMPTY_ARRAY } from '@/constants/common.constants';
 import type { TCategory } from '@/types/api.type';
 
 interface TCommonFields {

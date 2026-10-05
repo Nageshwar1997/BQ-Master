@@ -1,5 +1,6 @@
+import { EMPTY_OBJECT } from '@beautinique/frontend-constants';
+
 import LinearGradient from '@/components/ui/LinearGradient';
-import { EMPTY_OBJECT } from '@/constants/common.constants';
 import useScrollable from '@/hooks/useScrollable';
 import type { IScrollableGradientContainer } from '@/types/component.type';
 import type { TGradientPos } from '@/types/hook.type';

@@ -1,4 +1,4 @@
-import { CATEGORY_LEVELS_MAP } from '@beautinique/frontend-constants';
+import { CATEGORY_LEVELS_MAP, EMPTY_ARRAY } from '@beautinique/frontend-constants';
 import type { TCategoryZodSchema, TConfirmDetailsZodSchema } from '@beautinique/frontend-types';
 import { categoryZodSchema, confirmDetailsZodSchema } from '@beautinique/frontend-zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -13,7 +13,6 @@ import Stepper, { type StepperStep } from '@/components/ui/Stepper';
 import {
   CATEGORY_MODAL_STEPS,
   CATEGORY_STEPPER_STEP_COUNT_MAP,
-  EMPTY_ARRAY,
   QUERY_PARAMS_KEY_MAP,
 } from '@/constants/common.constants';
 import useQueryParams from '@/hooks/useQueryParams';

@@ -1,4 +1,4 @@
-import { SORT_MAP } from '@beautinique/frontend-constants';
+import { EMPTY_ARRAY, SORT_MAP } from '@beautinique/frontend-constants';
 import { Icon } from '@iconify/react';
 import type { ExpandedState, HeaderContext, SortingState } from '@tanstack/react-table';
 import { useTable } from '@tanstack/react-table';
@@ -19,7 +19,7 @@ import {
 } from '@/components/layout/table';
 import Badge from '@/components/ui/Badge';
 import Input from '@/components/ui/inputs/Input';
-import { EMPTY_ARRAY, QUERY_PARAMS_KEY_MAP } from '@/constants/common.constants';
+import { QUERY_PARAMS_KEY_MAP } from '@/constants/common.constants';
 import {
   CATEGORY_TABLE_FEATURES,
   createCategoryColumnHelper,
