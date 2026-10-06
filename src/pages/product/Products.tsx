@@ -1,4 +1,5 @@
 import { EMPTY_ARRAY, SORT_MAP } from '@beautinique/frontend-constants';
+import { useDebounce, useIsSmallScreen } from '@beautinique/frontend-hooks';
 import type { TCategoryLevel, TProductStatus, TSort } from '@beautinique/frontend-types';
 import { Icon } from '@iconify/react';
 import type { HeaderContext, SortingState } from '@tanstack/react-table';
@@ -29,8 +30,6 @@ import {
   type TAppTableFeatures,
   toColumn,
 } from '@/constants/table.constants';
-import useDebounce from '@/hooks/useDebounce';
-import useIsSmallScreen from '@/hooks/useIsSmallScreen';
 import usePathParams from '@/hooks/usePathParams';
 import useQueryParams from '@/hooks/useQueryParams';
 import { useGetCategoriesHierarchy } from '@/services/product-service/category.service.query';

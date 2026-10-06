@@ -1,8 +1,8 @@
+import { useOutsideClick } from '@beautinique/frontend-hooks';
 import { Icon } from '@iconify/react';
 import { cloneElement, isValidElement, useEffect, useRef, useState } from 'react';
 
 import { InputIcon } from '@/components/ui/inputs/children';
-import { useOutsideClick } from '@/hooks/useOutsideClick';
 import type { IDropdown } from '@/types/component.type';
 
 const Dropdown = ({

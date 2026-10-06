@@ -1,8 +1,8 @@
+import { useOutsideClick } from '@beautinique/frontend-hooks';
 import { Icon } from '@iconify/react';
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
-import { useOutsideClick } from '@/hooks/useOutsideClick';
 import type { ISelect } from '@/types/input.type';
 
 import { InputError, InputIcon, InputLabel } from './children';

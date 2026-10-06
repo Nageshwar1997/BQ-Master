@@ -1,9 +1,9 @@
 import '@beautinique/frontend-styles/color-input.css';
 
+import { useOutsideClick } from '@beautinique/frontend-hooks';
 import { useState } from 'react';
 import { ColorPicker, type IColor, useColor } from 'react-color-palette';
 
-import { useOutsideClick } from '@/hooks/useOutsideClick';
 import type { IColorInput } from '@/types/input.type';
 
 import { InputError, InputIcon, InputLabel } from '../children';

@@ -1,9 +1,9 @@
+import { useOutsideClick } from '@beautinique/frontend-hooks';
 import { Icon } from '@iconify/react';
 import { type ChangeEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
 import ApiStatus from '@/components/layout/ApiStatus';
-import { useOutsideClick } from '@/hooks/useOutsideClick';
 import type { IChildren } from '@/types/component.type';
 import type {
   IHierarchySelect,
