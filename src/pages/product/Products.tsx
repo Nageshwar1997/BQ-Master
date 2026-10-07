@@ -1,10 +1,15 @@
 import { EMPTY_ARRAY, SORT_MAP } from '@beautinique/frontend-constants';
-import { useDebounce, useIsSmallScreen, usePathParams, useQueryParams } from '@beautinique/frontend-hooks';
+import {
+  useIsSmallScreen,
+  usePathParams,
+  useQueryParamInput,
+  useQueryParams,
+} from '@beautinique/frontend-hooks';
 import type { TCategoryLevel, TProductStatus, TSort } from '@beautinique/frontend-types';
 import { Icon } from '@iconify/react';
 import type { HeaderContext, SortingState } from '@tanstack/react-table';
 import { useTable } from '@tanstack/react-table';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { Link } from 'react-router-dom';
 
@@ -43,21 +48,11 @@ import { formatDate, formatINRCurrency } from '@/utils/common.util';
 const SearchAndSort = () => {
   const { queryParams, setParams, removeParams } = useQueryParams();
   const isSmallScreen = useIsSmallScreen(1024);
-  const [searchQuery, setSearchQuery] = useState(queryParams.search ?? '');
+  // The box mirrors `?search=`: typing is debounced into the URL, and the box follows the URL when
+  // something else changes it (the status select, Back/Forward...).
+  const { value: searchQuery, setValue: handleSearch } = useQueryParamInput('search');
 
   const { data: hierarchy, isLoading, isError } = useGetCategoriesHierarchy();
-
-  const { trigger: handleSearch } = useDebounce({
-    callback: (value: string) => {
-      const trimmedValue = value.trim();
-      if (trimmedValue) {
-        setParams({ ...queryParams, search: trimmedValue });
-      } else {
-        removeParams(['search']);
-      }
-    },
-    delay: 600,
-  });
 
   const categories = useMemo(() => {
     const mapCategoryHierarchy = (
@@ -85,11 +80,7 @@ const SearchAndSort = () => {
           placeholder: 'Search products here...',
           value: searchQuery,
           onChange: (e) => {
-            const value = (e.target.value || '').trimStart();
-            // instant ui update
-            setSearchQuery(value);
-            // debounced action
-            handleSearch(value);
+            handleSearch(e.target.value || '');
           },
         }}
         containerClassName="max-w-xs! w-full"

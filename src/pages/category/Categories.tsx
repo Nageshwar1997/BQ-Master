@@ -1,5 +1,5 @@
 import { EMPTY_ARRAY, SORT_MAP } from '@beautinique/frontend-constants';
-import { useDebounce, useIsSmallScreen, useQueryParams } from '@beautinique/frontend-hooks';
+import { useIsSmallScreen, useQueryParamInput, useQueryParams } from '@beautinique/frontend-hooks';
 import { Icon } from '@iconify/react';
 import type { ExpandedState, HeaderContext, SortingState } from '@tanstack/react-table';
 import { useTable } from '@tanstack/react-table';
@@ -87,25 +87,19 @@ const Categories = () => {
   const { queryParams, setParams, removeParams, clearParams } = useQueryParams();
   const isSmallScreen = useIsSmallScreen(1024);
 
-  const [searchQuery, setSearchQuery] = useState(queryParams[q_cat_keys.search] ?? '');
+  // The box mirrors `?search=`: typing is debounced into the URL, and the box follows the URL when
+  // something else changes it (Back/Forward...).
+  const {
+    value: searchQuery,
+    setValue: handleSearch,
+    clear: clearSearch,
+  } = useQueryParamInput(q_cat_keys.search);
   const [expanded, setExpanded] = useState<ExpandedState>({});
   const [editData, setEditData] = useState<ICatModal | null>(null);
   const [deleteId, setDeleteId] = useState('');
 
   const { data: hierarchy = EMPTY_ARRAY, isLoading, isError } = useGetCategoriesHierarchy();
   const deleteCategory = useDeleteCategory({ categoryId: deleteId });
-
-  const { trigger: handleSearch } = useDebounce({
-    callback: (value: string) => {
-      const trimmedValue = value.trim();
-      if (trimmedValue) {
-        setParams({ [q_cat_keys.search]: trimmedValue });
-      } else {
-        removeParams([q_cat_keys.search]);
-      }
-    },
-    delay: 600,
-  });
 
   const search = useDeferredValue(queryParams[q_cat_keys.search] ?? '');
   const sortValue = queryParams[q_cat_keys.sort];
@@ -269,7 +263,7 @@ const Categories = () => {
               leftIcon: { icon: 'solar:eraser-linear', className: '*:stroke-[2.5]' },
               buttonProps: {
                 onClick: () => {
-                  setSearchQuery('');
+                  clearSearch();
                   clearParams();
                 },
               },
@@ -301,9 +295,7 @@ const Categories = () => {
                 placeholder: 'Search categories here...',
                 value: searchQuery,
                 onChange: (e) => {
-                  const value = (e.target.value || '').trimStart();
-                  setSearchQuery(value);
-                  handleSearch(value);
+                  handleSearch(e.target.value || '');
                 },
               }}
               containerClassName="max-w-sm"
