@@ -1,4 +1,5 @@
 import { CATEGORY_LEVELS_MAP, EMPTY_ARRAY } from '@beautinique/frontend-constants';
+import { useQueryParams } from '@beautinique/frontend-hooks';
 import type { TCategoryZodSchema, TConfirmDetailsZodSchema } from '@beautinique/frontend-types';
 import { categoryZodSchema, confirmDetailsZodSchema } from '@beautinique/frontend-zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -15,7 +16,6 @@ import {
   CATEGORY_STEPPER_STEP_COUNT_MAP,
   QUERY_PARAMS_KEY_MAP,
 } from '@/constants/common.constants';
-import useQueryParams from '@/hooks/useQueryParams';
 import {
   useAddCategory,
   useGetCategoriesByParentLevel,

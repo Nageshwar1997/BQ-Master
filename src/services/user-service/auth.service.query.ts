@@ -1,9 +1,9 @@
+import { usePathParams } from '@beautinique/frontend-hooks';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { authApi } from '@/classes/apis';
 import { API_QUERY_KEYS } from '@/constants/api.constants';
 import { ROUTES } from '@/constants/common.constants';
-import usePathParams from '@/hooks/usePathParams';
 import useUserStore from '@/stores/user.store';
 import { handleApiErrorToaster, handleApiSuccessToaster } from '@/utils/api.util';
 import { toaster } from '@/utils/common.util';

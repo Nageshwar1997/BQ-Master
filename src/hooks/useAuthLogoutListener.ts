@@ -1,7 +1,7 @@
+import { usePathParams } from '@beautinique/frontend-hooks';
 import { useEffect } from 'react';
 
 import { ROUTES } from '@/constants/common.constants';
-import usePathParams from '@/hooks/usePathParams';
 import useUserStore from '@/stores/user.store';
 
 const useAuthLogoutListener = () => {

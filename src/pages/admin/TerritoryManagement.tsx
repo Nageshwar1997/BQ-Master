@@ -1,4 +1,5 @@
 import { STATES_AND_UTS } from '@beautinique/frontend-constants';
+import { useQueryParams } from '@beautinique/frontend-hooks';
 import type { TAdminStatus, TStateOrUT } from '@beautinique/frontend-types';
 import { useTable } from '@tanstack/react-table';
 import { useMemo, useState } from 'react';
@@ -24,7 +25,6 @@ import Select from '@/components/ui/inputs/Select';
 import Textarea from '@/components/ui/inputs/Textarea';
 import Tooltip from '@/components/ui/Tooltip';
 import { APP_TABLE_FEATURES, createAppColumnHelper, toColumn } from '@/constants/table.constants';
-import useQueryParams from '@/hooks/useQueryParams';
 import { useGetSellerQueue } from '@/services/organization-service/seller.service.query';
 import {
   useAssignAdminTerritory,

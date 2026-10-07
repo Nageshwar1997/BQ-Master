@@ -1,6 +1,5 @@
+import { usePathParams } from '@beautinique/frontend-hooks';
 import { useEffect } from 'react';
-
-import usePathParams from '@/hooks/usePathParams';
 
 const ScrollToTop = () => {
   const { pathname } = usePathParams();

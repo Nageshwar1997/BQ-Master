@@ -1,3 +1,4 @@
+import { useQueryParams } from '@beautinique/frontend-hooks';
 import type { TSellerApprovalStatus } from '@beautinique/frontend-types';
 import { useTable } from '@tanstack/react-table';
 import { useMemo } from 'react';
@@ -16,7 +17,6 @@ import {
 import Badge from '@/components/ui/Badge';
 import Select from '@/components/ui/inputs/Select';
 import { APP_TABLE_FEATURES, createAppColumnHelper, toColumn } from '@/constants/table.constants';
-import useQueryParams from '@/hooks/useQueryParams';
 import { useGetSellerQueue } from '@/services/organization-service/seller.service.query';
 import type { ISeller, ISellerQueueQuery } from '@/types/api.type';
 import { formatDate } from '@/utils/common.util';

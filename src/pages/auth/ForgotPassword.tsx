@@ -1,3 +1,4 @@
+import { usePathParams } from '@beautinique/frontend-hooks';
 import type {
   TEmailZodSchema,
   TOtpZodSchema,
@@ -20,7 +21,6 @@ import {
   OTP_INPUT_DATA,
   PASSWORDS_INPUT_MAP_DATA,
 } from '@/constants/input.constants';
-import usePathParams from '@/hooks/usePathParams';
 import {
   useForgotPasswordResendOtp,
   useForgotPasswordSave,

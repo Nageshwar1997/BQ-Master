@@ -1,5 +1,5 @@
 import { EMPTY_ARRAY, SORT_MAP } from '@beautinique/frontend-constants';
-import { useDebounce, useIsSmallScreen } from '@beautinique/frontend-hooks';
+import { useDebounce, useIsSmallScreen, useQueryParams } from '@beautinique/frontend-hooks';
 import { Icon } from '@iconify/react';
 import type { ExpandedState, HeaderContext, SortingState } from '@tanstack/react-table';
 import { useTable } from '@tanstack/react-table';
@@ -27,7 +27,6 @@ import {
   type TCategoryTableFeatures,
   toColumn,
 } from '@/constants/table.constants';
-import useQueryParams from '@/hooks/useQueryParams';
 import {
   useDeleteCategory,
   useGetCategoriesHierarchy,

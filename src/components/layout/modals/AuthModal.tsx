@@ -1,6 +1,5 @@
+import { useQueryParams } from '@beautinique/frontend-hooks';
 import { useCallback, useEffect } from 'react';
-
-import useQueryParams from '@/hooks/useQueryParams';
 
 import LoginForm from '../forms/LoginForm';
 import { ModalWrapper } from './ModalWrapper';
@@ -9,7 +8,7 @@ const AuthModal = () => {
   const { queryParams, removeParams } = useQueryParams();
 
   const onClose = useCallback(() => {
-    removeParams(['login']);
+    removeParams(['login'], { replace: true });
   }, [removeParams]);
 
   /*

@@ -1,7 +1,7 @@
+import { useQueryParams } from '@beautinique/frontend-hooks';
+
 import useActionsStore from '@/stores/action.store';
 import useUserStore from '@/stores/user.store';
-
-import useQueryParams from './useQueryParams';
 
 const useAuthAction = () => {
   const user = useUserStore((s) => s.user);

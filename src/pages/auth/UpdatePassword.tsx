@@ -1,4 +1,5 @@
 import { AUTH_PROVIDER_MAP } from '@beautinique/frontend-constants';
+import { usePathParams } from '@beautinique/frontend-hooks';
 import type { TChangePasswordZodSchema } from '@beautinique/frontend-types';
 import { changePasswordZodSchema } from '@beautinique/frontend-zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -18,7 +19,6 @@ import {
   BASE_PASSWORDS_VISIBILITY,
   CHANGE_PASSWORD_INPUT_MAP_DATA,
 } from '@/constants/input.constants';
-import usePathParams from '@/hooks/usePathParams';
 import { useChangePassword } from '@/services/user-service/user.service.query';
 import useUserStore from '@/stores/user.store';
 import { setErrorToForm } from '@/utils/form.util';

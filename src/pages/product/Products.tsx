@@ -1,5 +1,5 @@
 import { EMPTY_ARRAY, SORT_MAP } from '@beautinique/frontend-constants';
-import { useDebounce, useIsSmallScreen } from '@beautinique/frontend-hooks';
+import { useDebounce, useIsSmallScreen, usePathParams, useQueryParams } from '@beautinique/frontend-hooks';
 import type { TCategoryLevel, TProductStatus, TSort } from '@beautinique/frontend-types';
 import { Icon } from '@iconify/react';
 import type { HeaderContext, SortingState } from '@tanstack/react-table';
@@ -30,8 +30,6 @@ import {
   type TAppTableFeatures,
   toColumn,
 } from '@/constants/table.constants';
-import usePathParams from '@/hooks/usePathParams';
-import useQueryParams from '@/hooks/useQueryParams';
 import { useGetCategoriesHierarchy } from '@/services/product-service/category.service.query';
 import { useGetDashboardProducts } from '@/services/product-service/product.service.query';
 import type {

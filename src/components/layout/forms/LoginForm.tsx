@@ -1,3 +1,4 @@
+import { usePathParams, useQueryParams } from '@beautinique/frontend-hooks';
 import type { TLoginZodSchema } from '@beautinique/frontend-types';
 import { loginZodSchema } from '@beautinique/frontend-zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -12,8 +13,6 @@ import Input from '@/components/ui/inputs/Input';
 import Radio from '@/components/ui/inputs/Radio';
 import { ROUTES } from '@/constants/common.constants';
 import { BASE_PASSWORD_KEYS, LOGIN_INPUT_MAP_DATA } from '@/constants/input.constants';
-import usePathParams from '@/hooks/usePathParams';
-import useQueryParams from '@/hooks/useQueryParams';
 import { useLogin } from '@/services/user-service/auth.service.query';
 import useActionsStore from '@/stores/action.store';
 import useUserStore from '@/stores/user.store';
@@ -69,7 +68,7 @@ const LoginForm = () => {
         if (paths.includes(ROUTES.AUTH.BASE)) {
           void navigate(ROUTES.DASHBOARD);
         } else if (queryParams.login) {
-          removeParams(['login']);
+          removeParams(['login'], { replace: true });
         }
       },
 

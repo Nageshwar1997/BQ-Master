@@ -1,3 +1,4 @@
+import { usePathParams, useQueryParams } from '@beautinique/frontend-hooks';
 import { Icon } from '@iconify/react';
 import { useMemo } from 'react';
 
@@ -10,8 +11,6 @@ import Button from '@/components/ui/Button';
 import Select from '@/components/ui/inputs/Select';
 import { QuillContent } from '@/components/ui/QuillContent';
 import { PRODUCT_STATUS_TRANSITIONS } from '@/constants/api.constants';
-import usePathParams from '@/hooks/usePathParams';
-import useQueryParams from '@/hooks/useQueryParams';
 import { useGetDashboardProductBySlug } from '@/services/product-service/product.service.query';
 import type { TMediaOption } from '@/types/component.type';
 import { formatDate, formatINRCurrency, isNullOrUndefined } from '@/utils/common.util';

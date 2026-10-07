@@ -1,3 +1,4 @@
+import { useQueryParams } from '@beautinique/frontend-hooks';
 import type {
   TTerritoryAssignmentReason,
   TTerritoryStatusChangeReason,
@@ -18,7 +19,6 @@ import {
 } from '@/components/layout/table';
 import Radio from '@/components/ui/inputs/Radio';
 import { APP_TABLE_FEATURES, createAppColumnHelper, toColumn } from '@/constants/table.constants';
-import useQueryParams from '@/hooks/useQueryParams';
 import { useGetSellerQueue } from '@/services/organization-service/seller.service.query';
 import { useGetTerritoryMap } from '@/services/user-service/admin.service.query';
 import { formatDate } from '@/utils/common.util';

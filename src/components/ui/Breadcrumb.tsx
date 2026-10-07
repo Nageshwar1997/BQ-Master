@@ -1,7 +1,7 @@
+import { usePathParams } from '@beautinique/frontend-hooks';
 import { Icon } from '@iconify/react';
 
 import { ROUTES } from '@/constants/common.constants';
-import usePathParams from '@/hooks/usePathParams';
 import type { IBreadcrumb } from '@/types/component.type';
 
 import ScrollableGradientContainer from '../layout/containers/ScrollableGradientContainer';

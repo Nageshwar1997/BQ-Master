@@ -1,10 +1,10 @@
+import { useQueryParams } from '@beautinique/frontend-hooks';
 import { Icon } from '@iconify/react';
 import { useMemo } from 'react';
 
 import Button from '@/components/ui/Button';
 import GradientText from '@/components/ui/GradientText';
 import { TOAST_TYPE } from '@/constants/common.constants';
-import useQueryParams from '@/hooks/useQueryParams';
 import type { TConfirmModal } from '@/types/component.type';
 
 import { ModalWrapper } from './ModalWrapper';
@@ -42,7 +42,7 @@ export const ConfirmModal = ({
       isOpen={modalProps?.isOpen ?? !!queryParams.confirm}
       onClose={() => {
         modalProps?.onClose();
-        removeParams('confirm');
+        removeParams('confirm', { replace: true });
       }}
       className={`max-w-sm border-2 ${modalProps?.className ?? ''}`}
       containerProps={{
@@ -95,7 +95,7 @@ export const ConfirmModal = ({
                   onClick: (e) => {
                     buttons.left?.buttonProps?.onClick?.(e);
                     modalProps?.onClose();
-                    removeParams('confirm');
+                    removeParams('confirm', { replace: true });
                   },
                 }}
               />

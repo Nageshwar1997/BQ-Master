@@ -1,4 +1,4 @@
-import { useIsSmallScreen } from '@beautinique/frontend-hooks';
+import { useIsSmallScreen, usePathParams } from '@beautinique/frontend-hooks';
 import { Icon } from '@iconify/react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -6,7 +6,6 @@ import { Link } from 'react-router-dom';
 import Divider from '@/components/ui/Divider';
 import Tooltip from '@/components/ui/Tooltip';
 import { ROUTES, SIDEBAR_DATA } from '@/constants/common.constants';
-import usePathParams from '@/hooks/usePathParams';
 import { useLogout } from '@/services/user-service/auth.service.query';
 
 import ScrollableGradientContainer from '../containers/ScrollableGradientContainer';

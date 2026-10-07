@@ -3,6 +3,7 @@ import {
   DRAFT_PRODUCT_STEP_MAP,
   EMPTY_ARRAY,
 } from '@beautinique/frontend-constants';
+import { usePathParams } from '@beautinique/frontend-hooks';
 import type {
   TConfirmDetailsZodSchema,
   TDraftProductStepBodyZodSchema,
@@ -30,7 +31,6 @@ import Button from '@/components/ui/Button';
 import Stepper from '@/components/ui/Stepper';
 import { ADD_PRODUCT_STEPS, ROUTES } from '@/constants/common.constants';
 import { ADD_PRODUCT_FORM_ID_MAP } from '@/constants/form.constants';
-import usePathParams from '@/hooks/usePathParams';
 import { useProcessQuillContent } from '@/hooks/useProcessQuillContent';
 import {
   useUploadMultipleMedia,

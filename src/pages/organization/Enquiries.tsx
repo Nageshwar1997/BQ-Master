@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import { CONTACT_QUERY_STATUS, CONTACT_QUERY_TYPES } from '@beautinique/frontend-constants';
+import { useQueryParams } from '@beautinique/frontend-hooks';
 import type { IListContactQueriesQuery, TContactQueryStatus } from '@beautinique/frontend-types';
 import { isNullOrUndefined } from '@beautinique/shared-utils';
 import { Icon } from '@iconify/react';
@@ -22,7 +23,6 @@ import {
 } from '@/components/layout/table';
 import Select from '@/components/ui/inputs/Select';
 import { APP_TABLE_FEATURES, createAppColumnHelper, toColumn } from '@/constants/table.constants';
-import useQueryParams from '@/hooks/useQueryParams';
 import {
   useGetContactQueries,
   useUpdateContactQueryStatus,
