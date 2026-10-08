@@ -1,3 +1,4 @@
+import { onlineStatusStore } from '@beautinique/frontend-hooks';
 import axios, {
   AxiosError,
   type AxiosInstance,
@@ -218,10 +219,24 @@ export class ApiRequest {
     });
 
     this.instance.interceptors.response.use(
-      (res) => res,
+      (res) => {
+        onlineStatusStore.confirmOnline(); // the server answered, so the internet works
+
+        return res;
+      },
       async (error: unknown) => {
         if (!axios.isAxiosError(error)) {
           return Promise.reject(error instanceof Error ? error : new Error(String(error)));
+        }
+
+        if (error.response) {
+          // An error page is still an answer: the internet works.
+          onlineStatusStore.confirmOnline();
+        } else if (!axios.isCancel(error)) {
+          // No answer at all (no connection, or a timeout): the browser may still think it is online
+          // (Wi-Fi without internet), so find out. A request that was cancelled on purpose says
+          // nothing about the connection.
+          onlineStatusStore.recheck();
         }
 
         if (!error.config) {

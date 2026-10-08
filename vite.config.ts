@@ -70,6 +70,6 @@ export default defineConfig(({ mode }) => ({
     // future test that genuinely needs the DOM (e.g. a component test) can override this per
     // file with a `// @vitest-environment jsdom` comment rather than paying that cost globally.
     environment: 'node',
-    include: ['src/**/*.test.ts'],
+    include: ['src/**/*.test.{ts,tsx}'],
   },
 }));

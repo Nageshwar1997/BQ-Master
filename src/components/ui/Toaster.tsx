@@ -1,3 +1,5 @@
+import '@/configs/toast-icons'; // bundles the icons below, so they also show without a network
+
 import { Icon } from '@iconify/react';
 import { type ComponentProps, useCallback, useEffect, useRef, useState } from 'react';
 
