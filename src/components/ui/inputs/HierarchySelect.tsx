@@ -161,14 +161,13 @@ const HierarchySelect = ({
   // The options list is portalled to <body> (see below) so it can escape any
   // ancestor `overflow-hidden`/`overflow-auto` (e.g. a scrollable table). Because
   // of that, `dropdownRef`'s DOM node is no longer a descendant of `containerRef`,
-  // so a plain "outside click" check would treat clicks on options as outside
-  // clicks and close the menu before the option's own onClick can fire.
+  // so it is listed in `ignore`: a press on an option is not an outside press and
+  // cannot close the menu before the option's own onClick can fire.
   const containerRef = useOutsideClick<HTMLDivElement>(
-    (event) => {
-      if (dropdownRef.current?.contains(event.target as Node)) return;
+    () => {
       setIsOpen(false);
     },
-    { enabled: isOpen },
+    { enabled: isOpen, ignore: [dropdownRef] },
   );
 
   const searchValue = inputProps?.value ?? search;
