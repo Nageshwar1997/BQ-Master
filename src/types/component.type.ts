@@ -119,11 +119,7 @@ interface TCustomConfirmModal extends IChildren {
 }
 
 interface IDefaultConfirmModal {
-  type:
-    | typeof TOAST_TYPE.success
-    | typeof TOAST_TYPE.error
-    | typeof TOAST_TYPE.warning
-    | typeof TOAST_TYPE.default;
+  type: 'success' | 'error' | 'warning' | 'default';
   children?: never;
   title: string;
   description?: string;

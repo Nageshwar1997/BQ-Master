@@ -18,11 +18,7 @@ interface IToastClosable {
 }
 
 export interface IDefaultToast extends IBaseToast, IToastClosable, ITitleDescription {
-  type:
-    | typeof TOAST_TYPE.success
-    | typeof TOAST_TYPE.error
-    | typeof TOAST_TYPE.warning
-    | typeof TOAST_TYPE.default;
+  type: 'success' | 'error' | 'warning' | 'default';
 }
 
 export interface ICustomToast extends IBaseToast, IToastClosable {
